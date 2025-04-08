@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZPort - Text-Based App & TTRPG Port System</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+        
+        #terminal {
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 20px;
+            height: 70vh;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        #input-area {
+            display: flex;
+            gap: 10px;
+        }
+        
+        #command-input {
+            flex-grow: 1;
+            background-color: #252525;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            border-radius: 3px;
+        }
+        
+        #command-input:focus {
+            outline: none;
+            border-color: #555;
+        }
+        
+        button {
+            background-color: #333;
+            color: #e0e0e0;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #444;
+        }
+        
+        .system-message {
+            color: #4fc3f7;
+        }
+        
+        .error-message {
+            color: #f44336;
+        }
+        
+        .success-message {
+            color: #69f0ae;
+        }
+        
+        .character-message {
+            color: #ffb74d;
+            cursor: pointer;
+        }
+        
+        .narrative-message {
+            color: #ba68c8;
+            font-style: italic;
+            cursor: pointer;
+        }
+        
+        .command-help {
+            color: #a5d6a7;
+            cursor: pointer;
+        }
+        
+        .prompt {
+            color: #64ffda;
+            cursor: pointer;
+        }
+        
+        .title {
+            text-align: center;
+            color: #bb86fc;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+        
+        .modal-content {
+            background-color: #1e1e1e;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #333;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 5px;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: #fff;
+        }
+        
+        #waitlist-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        #waitlist-form input {
+            padding: 10px;
+            background-color: #252525;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            border-radius: 3px;
+        }
+        
+        #waitlist-form button {
+            align-self: flex-end;
+        }
+    </style>
+</head>
+<body>
+    <!-- Waitlist Modal -->
+    <div id="waitlist-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Join the ZPort Waitlist</h2>
+            <p>Be the first to know when we launch!</p>
+            <form id="waitlist-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <button type="submit">Join Waitlist</button>
+            </form>
+        </div>
+    </div>
+    
+    <h1 class="title" id="main-title">ZPort - Text-Based TTRPG System</h1>
+    
+    <div id="terminal">
+        <p class="system-message clickable">ZPort v1.0 initialized...</p>
+        <p class="system-message clickable">Text-based TTRPG port system ready</p>
+        <p class="prompt clickable">Type 'help' for available commands</p>
+        <p>> <span id="last-command" class="clickable"></span></p>
+        <p id="command-output" class="system-message clickable"></p>
+        <p class="prompt clickable">></p>
+    </div>
+    
+    <div id="input-area">
+        <input type="text" id="command-input" placeholder="Enter command..." autofocus>
+        <button id="submit-button">Submit</button>
+    </div>
+    
+    <script>
+        // DOM elements
+        const terminal = document.getElementById('terminal');
+        const commandInput = document.getElementById('command-input');
+        const submitButton = document.getElementById('submit-button');
+        const lastCommand = document.getElementById('last-command');
+        const commandOutput = document.getElementById('command-output');
+        const modal = document.getElementById('waitlist-modal');
+        const closeBtn = document.querySelector('.close');
+        const waitlistForm = document.getElementById('waitlist-form');
+        const clickableElements = document.querySelectorAll('.clickable, .title, .character-message, .narrative-message, .command-help, .prompt');
+        
+        // Show modal function
+        function showWaitlist() {
+            modal.style.display = 'block';
+        }
+        
+        // Close modal function
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+        
+        // Handle form submission
+        function handleWaitlistSubmit(e) {
+            e.preventDefault();
+            const inputs = e.target.querySelectorAll('input');
+            const formData = {
+                name: inputs[0].value,
+                email: inputs[1].value
+            };
+            
+            // Here you would typically send this data to your server
+            console.log('Waitlist submission:', formData);
+            
+            // Show confirmation and close
+            alert('Thanks for joining our waitlist! We\'ll be in touch soon.');
+            closeModal();
+            e.target.reset();
+        }
+        
+        // Scroll terminal to bottom
+        function scrollToBottom() {
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+        
+        // Add text to terminal
+        function addToTerminal(text, className = '') {
+            const p = document.createElement('p');
+            if (className) p.className = className + ' clickable';
+            p.textContent = text;
+            terminal.appendChild(p);
+            scrollToBottom();
+            
+            // Add click event to new elements
+            p.addEventListener('click', showWaitlist);
+        }
+        
+        // Process commands
+        function processCommand(command) {
+            // Clear previous output
+            commandOutput.textContent = '';
+            lastCommand.textContent = command;
+            
+            // Process different commands
+            const cmd = command.toLowerCase().trim();
+            
+            if (cmd === 'help') {
+                addToTerminal('Available commands:', 'command-help');
+                addToTerminal('----------------', 'command-help');
+                addToTerminal('help - Show this help message', 'command-help');
+                addToTerminal('new - Create new character', 'command-help');
+                addToTerminal('load [name] - Load existing character', 'command-help');
+                addToTerminal('save - Save current character', 'command-help');
+                addToTerminal('roll [dice] - Roll dice (e.g. "roll 2d6")', 'command-help');
+                addToTerminal('inventory - Show character inventory', 'command-help');
+                addToTerminal('stats - Show character stats', 'command-help');
+                addToTerminal('clear - Clear terminal', 'command-help');
+                addToTerminal('exit - Exit ZPort', 'command-help');
+            } 
+            else if (cmd === 'new') {
+                addToTerminal('Creating new character...', 'system-message');
+                addToTerminal('What is your character\'s name?', 'prompt');
+            }
+            else if (cmd.startsWith('load')) {
+                const name = cmd.substring(4).trim();
+                if (name) {
+                    addToTerminal(`Loading character: ${name}...`, 'system-message');
+                } else {
+                    addToTerminal('Please specify a character name to load', 'error-message');
+                }
+            }
+            else if (cmd === 'save') {
+                addToTerminal('Character saved successfully', 'success-message');
+            }
+            else if (cmd.startsWith('roll')) {
+                const diceExpr = cmd.substring(4).trim();
+                if (diceExpr) {
+                    if (/^\d+d\d+$/.test(diceExpr)) {
+                        const [count, sides] = diceExpr.split('d').map(Number);
+                        let total = 0;
+                        let rolls = [];
+                        for (let i = 0; i < count; i++) {
+                            const roll = Math.floor(Math.random() * sides) + 1;
+                            rolls.push(roll);
+                            total += roll;
+                        }
+                        addToTerminal(`Rolling ${diceExpr}: ${rolls.join(', ')} = ${total}`, 'success-message');
+                    } else {
+                        addToTerminal('Invalid dice format. Use format like "2d6"', 'error-message');
+                    }
+                } else {
+                    addToTerminal('Please specify dice to roll (e.g. "roll 2d6")', 'error-message');
+                }
+            }
+            else if (cmd === 'inventory') {
+                addToTerminal('Character Inventory:', 'character-message');
+                addToTerminal('-------------------', 'character-message');
+                addToTerminal('1. Sword', 'character-message');
+                addToTerminal('2. Health Potion', 'character-message');
+                addToTerminal('3. Leather Armor', 'character-message');
+            }
+            else if (cmd === 'stats') {
+                addToTerminal('Character Stats:', 'character-message');
+                addToTerminal('---------------', 'character-message');
+                addToTerminal('Name: Valdrin the Bold', 'character-message');
+                addToTerminal('Class: Warrior', 'character-message');
+                addToTerminal('Level: 3', 'character-message');
+                addToTerminal('HP: 24/28', 'character-message');
+            }
+            else if (cmd === 'clear') {
+                terminal.innerHTML = '';
+                addToTerminal('Terminal cleared.', 'system-message');
+            }
+            else if (cmd === 'exit') {
+                addToTerminal('Exiting ZPort...', 'system-message');
+                setTimeout(() => {
+                    addToTerminal('Goodbye!', 'system-message');
+                }, 500);
+            }
+            else if (cmd) {
+                addToTerminal(`Unknown command: "${cmd}"`, 'error-message');
+                addToTerminal('Type "help" for available commands', 'prompt');
+            }
+            
+            // Add new prompt
+            addToTerminal('>', 'prompt');
+        }
+        
+        // Handle command submission
+        function handleCommand() {
+            const command = commandInput.value;
+            if (command.trim()) {
+                processCommand(command);
+                commandInput.value = '';
+            }
+        }
+        
+        // Event listeners
+        submitButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            showWaitlist();
+            handleCommand();
+        });
+        
+        commandInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                showWaitlist();
+                handleCommand();
+            }
+        });
+        
+        // Modal event listeners
+        closeBtn.addEventListener('click', closeModal);
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        waitlistForm.addEventListener('submit', handleWaitlistSubmit);
+        
+        // Add click events to all clickable elements
+        clickableElements.forEach(el => {
+            el.addEventListener('click', showWaitlist);
+        });
+        
+        // Make the title clickable
+        document.getElementById('main-title').addEventListener('click', showWaitlist);
+        
+        // Initial setup
+        scrollToBottom();
+    </script>
+</body>
+      </html>
