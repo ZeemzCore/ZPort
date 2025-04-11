@@ -1,3 +1,40 @@
+<!-- FIX FOR IT TO FUNCTION 
+Errors Requiring Fixes Before Functioning
+
+    Clipboard API Implementation:
+        The document.execCommand('copy') method is deprecated. This should be replaced with the modern Clipboard API:
+
+    javascript
+
+    navigator.clipboard.writeText(input.value).then(() => {
+      alert('Copied to clipboard!');
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
+    });
+
+    Missing Error Handling:
+        The router doesn't handle invalid routes gracefully. While there is a "Page not found" message, there should be a dedicated 404 component.
+    Security Issues:
+        The code uses innerHTML for rendering components, which could lead to XSS vulnerabilities if user input is ever included.
+    Placeholder Content:
+        All banner images are using placeholder URLs that won't work in production.
+    Missing Data Integration:
+        There's no actual connection to any backend service for retrieving or storing user data.
+    Static Referral Link:
+        The referral link is hardcoded rather than being dynamically generated based on the user's actual username.
+    Lack of Form Validation:
+        No validation is implemented for any input fields.
+    Accessibility Issues:
+        No ARIA attributes or keyboard navigation support for accessibility.
+    Outdated Alert Usage:
+        Using alert() for notifications is not user-friendly; a custom notification system would be better.
+    No Loading States:
+        The application doesn't show loading indicators during state transitions.
+
+These issues should be addressed before the application is deployed for actual use to ensure proper functionality, security, and user experience.
+-->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
