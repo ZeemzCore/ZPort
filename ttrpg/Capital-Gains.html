@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capitol Gains - Stock Market Politics TTRPG</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #ffab00;
+            --accent: #d32f2f;
+            --light: #f5f5f5;
+            --dark: #212121;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        .game-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .player-section, .game-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .player-info {
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #303f9f;
+        }
+        
+        .dice-roll {
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .dice-roll:hover {
+            background-color: #ffc107;
+        }
+        
+        .action-btn {
+            background-color: var(--accent);
+        }
+        
+        .action-btn:hover {
+            background-color: #f44336;
+        }
+        
+        .game-log {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        .log-entry {
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .portfolio {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .portfolio-item {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .portfolio-item h4 {
+            margin-bottom: 5px;
+        }
+        
+        .portfolio-value {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .positive {
+            color: #388e3c;
+        }
+        
+        .negative {
+            color: var(--accent);
+        }
+        
+        .politician-card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+        
+        .politician-card h4 {
+            margin-bottom: 5px;
+        }
+        
+        .politician-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+        }
+        
+        .win-condition {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            border-left: 4px solid #388e3c;
+        }
+        
+        @media (max-width: 768px) {
+            .game-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Capitol Gains</h1>
+        <p class="subtitle">A TTRPG about Stocks, Politics, and Power</p>
+    </header>
+    
+    <div class="game-container">
+        <section class="player-section">
+            <h2>Your Portfolio</h2>
+            
+            <div class="player-info">
+                <div class="form-group">
+                    <label for="player-name">Player Name</label>
+                    <input type="text" id="player-name" placeholder="Your name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="party-affiliation">Political Affiliation</label>
+                    <select id="party-affiliation">
+                        <option value="democrat">Democrat</option>
+                        <option value="republican">Republican</option>
+                        <option value="independent">Independent</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Starting Capital: <span id="starting-capital">$1,000,000</span></label>
+                </div>
+                
+                <div class="form-group">
+                    <label>Current Net Worth: <span id="net-worth" class="portfolio-value">$1,000,000</span></label>
+                </div>
+            </div>
+            
+            <div class="portfolio">
+                <div class="portfolio-item">
+                    <h4>Cash</h4>
+                    <div id="cash-amount">$1,000,000</div>
+                </div>
+                <div class="portfolio-item">
+                    <h4>Stocks</h4>
+                    <div id="stocks-value">$0</div>
+                </div>
+                <div class="portfolio-item">
+                    <h4>Political Influence</h4>
+                    <div id="influence-value">0 points</div>
+                </div>
+                <div class="portfolio-item">
+                    <h4>Public Approval</h4>
+                    <div id="approval-value">50%</div>
+                </div>
+            </div>
+            
+            <div class="win-condition">
+                <h3>Win Condition</h3>
+                <p>Reach $10,000,000 net worth while maintaining at least 60% public approval and 100 influence points with at least one branch of government.</p>
+            </div>
+        </section>
+        
+        <section class="game-section">
+            <h2>Political Arena</h2>
+            
+            <div class="game-log" id="game-log">
+                <div class="log-entry">Welcome to Capitol Gains! Create your portfolio and start playing.</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="politician-select">Select Politician to Support</label>
+                <select id="politician-select">
+                    <option value="">-- Choose a Politician --</option>
+                    <option value="senator1">Senator A. Johnson (D)</option>
+                    <option value="senator2">Senator B. Smith (R)</option>
+                    <option value="representative1">Rep. C. Lee (D)</option>
+                    <option value="representative2">Rep. D. Wilson (R)</option>
+                    <option value="president">The President</option>
+                    <option value="justice1">Justice E. Roberts</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="stock-select">Select Stock to Invest In (Based on recent political filings)</label>
+                <select id="stock-select">
+                    <option value="">-- Choose a Stock --</option>
+                    <option value="tech">Tech Giant Inc. (Recent buys by 3 Senators)</option>
+                    <option value="energy">Energy Future Corp. (Presidential family holdings)</option>
+                    <option value="pharma">MediPharm Solutions (SC Justice reported holdings)</option>
+                    <option value="defense">National Defense Systems (Congressional favorite)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="investment-amount">Investment Amount ($)</label>
+                <input type="number" id="investment-amount" placeholder="e.g. 100000">
+            </div>
+            
+            <button id="invest-btn" class="action-btn">Make Investment</button>
+            <button id="support-btn" class="action-btn">Support Politician</button>
+            <button id="roll-btn" class="dice-roll">Roll for Policy Outcome (D20)</button>
+            
+            <h3 style="margin-top: 20px;">Current Politicians</h3>
+            <div id="politicians-list">
+                <div class="politician-card">
+                    <h4>Senator A. Johnson (D)</h4>
+                    <div class="politician-stats">
+                        <span>Influence: 0/100</span>
+                        <span>Recent Trades: Tech, Energy</span>
+                    </div>
+                </div>
+                <div class="politician-card">
+                    <h4>Senator B. Smith (R)</h4>
+                    <div class="politician-stats">
+                        <span>Influence: 0/100</span>
+                        <span>Recent Trades: Defense, Pharma</span>
+                    </div>
+                </div>
+                <div class="politician-card">
+                    <h4>The President</h4>
+                    <div class="politician-stats">
+                        <span>Influence: 0/100</span>
+                        <span>Recent Trades: Energy, Tech</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+    // Game state
+    const gameState = {
+        playerName: "",
+        partyAffiliation: "democrat",
+        cash: 1000000,
+        stocks: {
+            tech: { amount: 0, value: 0 },
+            energy: { amount: 0, value: 0 },
+            pharma: { amount: 0, value: 0 },
+            defense: { amount: 0, value: 0 }
+        },
+        influence: 0,
+        approval: 50,
+        politicians: {
+            senator1: { name: "Senator A. Johnson (D)", influence: 0, trades: ["tech", "energy"] },
+            senator2: { name: "Senator B. Smith (R)", influence: 0, trades: ["defense", "pharma"] },
+            representative1: { name: "Rep. C. Lee (D)", influence: 0, trades: ["tech", "pharma"] },
+            representative2: { name: "Rep. D. Wilson (R)", influence: 0, trades: ["energy", "defense"] },
+            president: { name: "The President", influence: 0, trades: ["energy", "tech"] },
+            justice1: { name: "Justice E. Roberts", influence: 0, trades: ["pharma", "defense"] }
+        }
+    };
+
+    // DOM elements
+    const playerNameInput = document.getElementById("player-name");
+    const partySelect = document.getElementById("party-affiliation");
+    const netWorthSpan = document.getElementById("net-worth");
+    const cashAmountDiv = document.getElementById("cash-amount");
+    const stocksValueDiv = document.getElementById("stocks-value");
+    const influenceValueDiv = document.getElementById("influence-value");
+    const approvalValueDiv = document.getElementById("approval-value");
+    const gameLogDiv = document.getElementById("game-log");
+    const politicianSelect = document.getElementById("politician-select");
+    const stockSelect = document.getElementById("stock-select");
+    const investmentAmountInput = document.getElementById("investment-amount");
+    const investBtn = document.getElementById("invest-btn");
+    const supportBtn = document.getElementById("support-btn");
+    const rollBtn = document.getElementById("roll-btn");
+    const politiciansList = document.getElementById("politicians-list");
+
+    // Initialize the game
+    function initGame() {
+        // Set up event listeners
+        playerNameInput.addEventListener("change", updatePlayerName);
+        partySelect.addEventListener("change", updatePartyAffiliation);
+        investBtn.addEventListener("click", makeInvestment);
+        supportBtn.addEventListener("click", supportPolitician);
+        rollBtn.addEventListener("click", rollForPolicy);
+        
+        // Initialize the UI
+        updateUI();
+    }
+
+    // Update player name in game state
+    function updatePlayerName() {
+        gameState.playerName = playerNameInput.value;
+        addLogEntry(`Player name set to: ${gameState.playerName}`);
+    }
+
+    // Update party affiliation in game state
+    function updatePartyAffiliation() {
+        gameState.partyAffiliation = partySelect.value;
+        addLogEntry(`Political affiliation set to: ${partySelect.options[partySelect.selectedIndex].text}`);
+        
+        // Adjust starting approval based on party
+        if (gameState.partyAffiliation === gameState.politicians[politicianSelect.value]?.name.includes("(D)") ? "democrat" : "republican") {
+            gameState.approval += 5;
+        } else {
+            gameState.approval -= 5;
+        }
+        updateUI();
+    }
+
+    // Make an investment in a stock
+    function makeInvestment() {
+        const stock = stockSelect.value;
+        const amount = parseInt(investmentAmountInput.value);
+        
+        if (!stock) {
+            addLogEntry("Please select a stock to invest in.");
+            return;
+        }
+        
+        if (isNaN(amount) || amount <= 0) {
+            addLogEntry("Please enter a valid investment amount.");
+            return;
+        }
+        
+        if (amount > gameState.cash) {
+            addLogEntry("You don't have enough cash for this investment.");
+            return;
+        }
+        
+        // Make the investment
+        gameState.cash -= amount;
+        gameState.stocks[stock].amount += amount;
+        
+        // Simulate market reaction (random fluctuation between -10% and +30%)
+        const marketReaction = Math.random() * 0.4 - 0.1; // -10% to +30%
+        const valueChange = amount * marketReaction;
+        gameState.stocks[stock].value = gameState.stocks[stock].amount + valueChange;
+        
+        // Log the transaction
+        addLogEntry(`Invested $${amount.toLocaleString()} in ${getStockName(stock)}. Market reaction: ${(marketReaction * 100).toFixed(1)}%`);
+        
+        // Check if this was an insider trading opportunity
+        checkInsiderTrading(stock);
+        
+        // Update the UI
+        updateUI();
+    }
+
+    // Support a politician to gain influence
+    function supportPolitician() {
+        const politician = politicianSelect.value;
+        
+        if (!politician) {
+            addLogEntry("Please select a politician to support.");
+            return;
+        }
+        
+        // Cost is $50,000 per influence point
+        const cost = 50000;
+        
+        if (gameState.cash < cost) {
+            addLogEntry("You need at least $50,000 to support a politician.");
+            return;
+        }
+        
+        // Make the support payment
+        gameState.cash -= cost;
+        gameState.politicians[politician].influence += 1;
+        gameState.influence += 1;
+        
+        // Random chance of public backlash (10%)
+        if (Math.random() < 0.1) {
+            gameState.approval -= 5;
+            addLogEntry(`You supported ${gameState.politicians[politician].name} for $${cost.toLocaleString()}, but a journalist noticed. Public approval dropped 5%.`);
+        } else {
+            addLogEntry(`You supported ${gameState.politicians[politician].name} for $${cost.toLocaleString()}. Influence +1`);
+        }
+        
+        // Update the UI
+        updateUI();
+        updatePoliticiansList();
+    }
+
+    // Roll for policy outcomes
+    function rollForPolicy() {
+        // Roll a d20
+        const roll = Math.floor(Math.random() * 20) + 1;
+        addLogEntry(`You rolled a ${roll} on the policy die.`);
+        
+        // Different outcomes based on the roll
+        if (roll === 20) {
+            // Critical success - major policy shift in your favor
+            const randomStock = Object.keys(gameState.stocks)[Math.floor(Math.random() * Object.keys(gameState.stocks).length)];
+            const boost = Math.random() * 0.5 + 0.5; // 50% to 100% boost
+            
+            for (const stock in gameState.stocks) {
+                if (stock === randomStock) {
+                    gameState.stocks[stock].value += gameState.stocks[stock].amount * boost;
+                    addLogEntry(`Critical success! Major positive policy shift for ${getStockName(stock)}. Value increased by ${(boost * 100).toFixed(0)}%!`);
+                }
+            }
+            
+            gameState.approval += 5;
+            addLogEntry("Public sees you as a visionary investor. Approval +5%");
+        } else if (roll >= 15) {
+            // Success - favorable policy
+            for (const stock in gameState.stocks) {
+                const boost = Math.random() * 0.2 + 0.1; // 10% to 30% boost
+                gameState.stocks[stock].value += gameState.stocks[stock].value * boost;
+            }
+            addLogEntry("Favorable policies enacted. All your stocks increased in value!");
+        } else if (roll >= 10) {
+            // Mixed results
+            addLogEntry("Market uncertainty due to mixed policy signals. No significant changes.");
+        } else if (roll >= 5) {
+            // Minor setback
+            for (const stock in gameState.stocks) {
+                const drop = Math.random() * 0.1 + 0.05; // 5% to 15% drop
+                gameState.stocks[stock].value -= gameState.stocks[stock].value * drop;
+            }
+            addLogEntry("Unfavorable policies enacted. All your stocks decreased slightly in value.");
+        } else {
+            // Critical failure - scandal or crash
+            for (const stock in gameState.stocks) {
+                const crash = Math.random() * 0.3 + 0.2; // 20% to 50% crash
+                gameState.stocks[stock].value -= gameState.stocks[stock].value * crash;
+            }
+            gameState.approval -= 10;
+            addLogEntry("Critical failure! Market crash and scandal. All stocks plummeted and your approval dropped by 10%!");
+        }
+        
+        // Update the UI
+        updateUI();
+        
+        // Check win condition
+        checkWinCondition();
+    }
+
+    // Check for insider trading opportunities
+    function checkInsiderTrading(stock) {
+        // Check if any politician the player has influence with trades in this stock
+        let insiderInfo = false;
+        let influentialPoliticians = [];
+        
+        for (const politicianKey in gameState.politicians) {
+            const politician = gameState.politicians[politicianKey];
+            if (politician.influence >= 50 && politician.trades.includes(stock)) {
+                insiderInfo = true;
+                influentialPoliticians.push(politician.name);
+            }
+        }
+        
+        if (insiderInfo) {
+            // Bonus returns due to insider information
+  
