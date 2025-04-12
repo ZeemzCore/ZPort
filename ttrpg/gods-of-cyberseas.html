@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBERSEAS PANTHEON - Digital Piracy & Ancient Deities Collide</title>
+    <style>
+        :root {
+            --bg-color: #0a0e17;
+            --text-color: #e6e6e6;
+            --accent-primary: #00ffaa;
+            --accent-secondary: #ff00aa;
+            --panel-color: #141c2b;
+            --header-color: #1a2333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            background-image: 
+                linear-gradient(rgba(0, 255, 170, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 170, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        header {
+            background-color: var(--header-color);
+            border-bottom: 2px solid var(--accent-primary);
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.3);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-primary);
+            text-shadow: 0 0 5px rgba(0, 255, 170, 0.5);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 0.5rem;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-primary);
+            border-bottom: 1px solid var(--accent-primary);
+        }
+
+        /* Dropdown menu styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--panel-color);
+            min-width: 160px;
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+            z-index: 1;
+            border: 1px solid var(--accent-primary);
+        }
+
+        .dropdown-content a {
+            color: var(--text-color);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #1e2639;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropbtn {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            background: none;
+            font: inherit;
+        }
+
+        .dropbtn:hover {
+            color: var(--accent-primary);
+            border-bottom: 1px solid var(--accent-primary);
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .hero {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background-color: rgba(20, 28, 43, 0.7);
+            border: 1px solid var(--accent-primary);
+            box-shadow: 0 0 20px rgba(0, 255, 170, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
+        }
+        
+        h2 {
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--accent-secondary);
+            padding-bottom: 0.5rem;
+        }
+        
+        h3 {
+            color: var(--accent-secondary);
+            margin: 1rem 0;
+        }
+        
+        .intro {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .deity-section {
+            margin-bottom: 3rem;
+            background-color: var(--panel-color);
+            padding: 1.5rem;
+            border-left: 3px solid var(--accent-primary);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .deity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .deity-card {
+            background-color: var(--panel-color);
+            border: 1px solid var(--accent-secondary);
+            padding: 1.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .deity-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.3);
+            border-color: var(--accent-primary);
+        }
+        
+        .deity-card h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .metrics {
+            background-color: var(--panel-color);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--accent-secondary);
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        
+        .metric {
+            text-align: center;
+            padding: 0.5rem;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-primary);
+            text-shadow: 0 0 5px rgba(0, 255, 170, 0.5);
+        }
+        
+        button.cta {
+            background-color: var(--accent-primary);
+            color: var(--bg-color);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 1rem 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            width: 100%;
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.5);
+        }
+        
+        button.cta:hover {
+            background-color: var(--accent-secondary);
+            box-shadow: 0 0 15px rgba(255, 0, 170, 0.5);
+        }
+
+        /* Treasure map styles */
+        .treasure-map {
+            background-color: #c9a06b;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23a57c52' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+            border: 8px double #8b4513;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            color: #3a2815;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .treasure-map::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(139, 69, 19, 0.1),
+                rgba(139, 69, 19, 0.1) 10px,
+                rgba(139, 69, 19, 0.05) 10px,
+                rgba(139, 69, 19, 0.05) 20px
+            );
+            pointer-events: none;
+        }
+
+        .treasure-map h2 {
+            color: #8b4513;
+            text-align: center;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 2px dashed #8b4513;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);
+        }
+
+        .pantheon-route {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.3);
+            border: 2px dashed #8b4513;
+            position: relative;
+        }
+
+        .pantheon-route::before {
+            content: "✯";
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #d61818;
+            font-size: 1.5rem;
+        }
+
+        .pantheon-route h3 {
+            color: #8b4513;
+            margin-bottom: 0.5rem;
+        }
+
+        .route-path {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .route-point {
+            width: 20px;
+            height: 20px;
+            background-color: #d61818;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .route-point::after {
+            content: "";
+            width: 10px;
+            height: 10px;
+            background-color: #ffd700;
+            border-radius: 50%;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+        }
+
+        .route-line {
+            flex-grow: 1;
+            height: 3px;
+            background: repeating-linear-gradient(
+                90deg,
+                #8b4513,
+                #8b4513 10px,
+                transparent 10px,
+                transparent 20px
+            );
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--header-color);
+            border-top: 2px solid var(--accent-primary);
+            margin-top: 2rem;
+        }
+        
+        .pixel-art {
+            font-family: monospace;
+            white-space: pre;
+            font-size: 10px;
+            line-height: 1;
+            margin: 1rem 0;
+            color: var(--accent-primary);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .deity-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">CY83RS34S P4NTH30N</div>
+            <div class="nav-links">
+                <a href="#">Home</a>
+                <a href="#jupiter">Jupiter</a>
+                <a href="#neptune">Neptune</a>
+                <a href="#mercury">Mercury</a>
+                <a href="#minerva">Minerva</a>
+                <div class="dropdown">
+                    <button class="dropbtn">More Gods ▼</button>
+                    <div class="dropdown-content">
+                        <a href="#venus">Venus</a>
+                        <a href="#mars">Mars</a>
+                        <a href="#apollo">Apollo</a>
+                        <a href="#diana">Diana</a>
+                        <a href="#vulcan">Vulcan</a>
+                        <a href="#pluto">Pluto</a>
+                    </div>
+                </div>
+                <a href="#roadmap">Roadmap</a>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="hero">
+            <h1>CYBERSEAS PANTHEON</h1>
+            <p>Digital Piracy meets Ancient Mythology</p>
+            <button class="cta">JOIN THE CREW</button>
+        </section>
+        
+        <section class="metrics">
+            <div class="metric">
+                <div>Page Visits</div>
+                <div class="metric-value" id="pageVisits">1</div>
+            </div>
+            <div class="metric">
+                <div>Deity Favor</div>
+                <div class="metric-value" id="deityFavor">0</div>
+            </div>
+            <div class="metric">
+                <div>Session Time</div>
+                <div class="metric-value" id="sessionTime">00:00</div>
+            </div>
+        </section>
+        
+        <section class="intro">
+            <h2>Welcome, Cyber Pirate!</h2>
+            <p>You've hacked your way into the digital domains of the ancient gods. The Roman deities have adapted to the new digital sea, claiming territories within the vast network and establishing their own cyber domains of power.</p>
+            <p>As a cyber sea pirate, you'll navigate these treacherous waters, encounter these powerful entities, and potentially earn their favor — or their wrath. This guide will help you understand the pantheon you'll encounter in your digital voyages.</p>
+            <p>The information contained herein combines classical mythology with our game's cyber interpretation, providing both educational content and essential gaming mechanics for your adventures.</p>
+        </section>
+        
+        <section class="deity-section" id="jupiter">
+            <h2>JUPITER (ZEUS)</h2>
+            <h3>The Sovereign of the Digital Sky</h3>
+            
+            <div>
+                <h3>Classical Mythology</h3>
+                <p>Jupiter was the king of the gods in Roman mythology, equivalent to Zeus in Greek tradition. He ruled over the sky, thunder, and lightning, serving as the chief deity of the Roman state religion until Christianity became dominant. He was the son of Saturn and brother to Neptune and Pluto.</p>
+                
+                <h3>Cyber Domain: The Cloud Sovereign</h3>
+                <p>In the cyber sea, Jupiter rules over the vast cloud infrastructure that powers the digital world. His domain encompasses data centers, cloud platforms, and the digital lightning of electric power that sustains the network. He oversees all electronic communications that travel through the air—WiFi, cellular data, and satellite transmissions all fall under his purview.</p>
+                
+                <h3>Treasures & Artifacts</h3>
+                <ul>
+                    <li><strong>The Thunderbolt Access Key:</strong> A cryptographic key that grants administrative access to cloud systems</li>
+                    <li><strong>Eagle Surveillance Drone:</strong> Jupiter's eyes in the digital skies, capable of intercepting any wireless transmission</li>
+                    <li><strong>The Golden Authentication Token:</strong> A rare artifact that allows the bearer to impersonate Jupiter in any digital system</li>
+                </ul>
+                
+                <h3>Pirate Encounters</h3>
+                <p>Cyber pirates might encounter Jupiter when attempting to breach major cloud services or when disrupting power infrastructure. He may appear as a system administrator with godlike privileges or a sudden surge of electrical power. Jupiter values authority and respect—pirates who acknowledge his sovereignty might earn his favor, while those who challenge him directly will face his digital thunderbolts.</p>
+                
+                <h3>Historical Information</h3>
+                <p>The worship of Jupiter was central to Ancient Rome, with his main temple, the Temple of Jupiter Optimus Maximus, standing on the Capitoline Hill. Jupiter was invoked before battles and was considered the divine protector of the Roman state. The Romans held ceremonies in his honor during the Ides (13th or 15th) of each month, with major festivals on the Ides of September.</p>
+            </div>
+        </section>
+        
+        <section class="deity-section" id="neptune">
+            <h2>NEPTUNE (POSEIDON)</h2>
+            <h3>Lord of the Digital Depths</h3>
+            
+            <div>
+                <h3>Classical Mythology</h3>
+                <p>Neptune was the Roman god of freshwater and the sea, equivalent to the Greek Poseidon. Brother to Jupiter and Pluto, he was often depicted wielding a trident and commanding sea creatures. Though primarily associated with the ocean, Neptune was also connected to earthquakes and horses.</p>
+                
+                <h3>Cyber Domain: The Data Depths</h3>
+                <p>Neptune rules the deep data sea—the dark web, encrypted channels, submarine cables, and the vast repositories of data that flow beneath the visible internet. His domain includes all underwater network infrastructure and the hidden databases that store the digital world's secrets. Cryptocurrency exchanges and blockchain networks pay him tribute as their transactions flow through his realm.</p>
+                
+                <h3>Treasures & Artifacts</h3>
+                <ul>
+                    <li><strong>The Digital Trident:</strong> A hacking tool capable of penetrating the most secure underwater data cables</li>
+                    <li><strong>Seahorse Proxy Network:</strong> A system that allows untraceable movement through the digital depths</li>
+                    <li><strong>Coral Keys:</strong> Access tokens to the most valuable hidden databases in the deep web</li>
+                </ul>
+                
+                <h3>Pirate Encounters</h3>
+                <p>Cyber pirates frequently cross Neptune's path when diving into the dark web or when attempting to tap submarine data cables. He appears as sudden turbulence in data streams or as mysterious encrypted messages. Neptune respects bold explorers but is territorial—pirates should offer digital tributes when crossing his domain. Those who pollute his data seas with malware may find their ships sunk by his wrath.</p>
+                
+                <h3>Historical Information</h3>
+                <p>The Romans celebrated Neptune with a festival called Neptunalia on July 23rd. While Jupiter had more political importance, Neptune was vital to Roman naval power and maritime trade. Sailors would make offerings to Neptune before voyages to ensure safe passage. His consort was Salacia, a goddess representing salt water, and together they had a son named Triton, who was depicted as half-man, half-fish.</p>
+            </div>
+        </section>
+        
+        <section class="deity-section" id="mercury">
+            <h2>MERCURY (HERMES)</h2>
+            <h3>The Messenger of the Network</h3>
+            
+            <div>
+                <h3>Classical Mythology</h3>
+                <p>Mercury was the Roman messenger god, equivalent to Hermes in Greek mythology. Known for his speed and cunning, Mercury served as the mediator between the worlds of gods and mortals. He was the patron of travelers, merchants, thieves, and all who relied on speed and wit.</p>
+                
+                <h3>Cyber Domain: The Protocol Pathways</h3>
+                <p>Mercury governs all digital communications protocols and data packet routing through the cyber sea. His domain includes messaging platforms, email systems, and the very TCP/IP foundations of the internet. He moves effortlessly between different network layers, ensuring data reaches its destination. As patron of both commerce and thieves, he oversees both legitimate digital transactions and the exploits that circumvent them.</p>
+                
+                <h3>Treasures & Artifacts</h3>
+                <ul>
+                    <li><strong>The Winged Router:</strong> A networking device that can bypass any firewall or restriction</li>
+                    <li><strong>Caduceus Encryption:</strong> A messaging algorithm that ensures perfect secrecy in communications</li>
+                    <li><strong>The Traveler's Mask:</strong> A digital identity concealment tool that changes with each connection</li>
+                </ul>
+                
+                <h3>Pirate Encounters</h3>
+                <p>Mercury is the deity cyber pirates encounter most frequently, as his domain of messages and transactions intersects constantly with pirate activities. He may appear as a helpful glitch in a security system or as an unexpected routing solution through blocked networks. Mercury appreciates cleverness and innovation—pirates who develop new exploits or communication methods might gain his favor. However, his allegiances shift quickly, and he may just as easily alert authorities to a pirate's presence if offered a better deal.</p>
+                
+                <h3>Historical Information</h3>
+                <p>Mercury was highly regarded by Roman merchants who sought his protection for their commercial enterprises. His festival, Mercuralia, was celebrated on May 15th. Mercury was typically depicted wearing winged sandals (talaria) and a winged hat (petasus), carrying the caduceus—a staff entwined with two serpents that became a symbol of commerce and negotiation. The Romans also associated Mercury with eloquence and persuasion, making him important to orators and diplomats.</p>
+            </div>
+        </section>
+        
+        <section class="deity-section" id="minerva">
+            <h2>MINERVA (ATHENA)</h2>
+            <h3>The Strategic Intelligence of the Network</h3>
+            
+            <div>
+                <h3>Classical Mythology</h3>
+                <p>Minerva was the Roman goddess of wisdom, strategic warfare, and the arts, equivalent to Athena in Greek mythology. Born fully armored from the head of Jupiter, she represented calculated thought rather than brute force. As a virgin goddess, she remained independent and focused on intellectual pursuits.</p>
+                
+                <h3>Cyber Domain: The Knowledge Architecture</h3>
+                <p>Minerva governs artificial intelligence, algorithms, and the organized knowledge structures of the digital world. Her domain includes machine learning systems, digital libraries, educational platforms, and strategic cybersecurity operations. She is the patron of white-hat hackers, security researchers, and all who seek to defend digital territories through intelligence rather than raw power.</p>
+                
+                <h3>Treasures & Artifacts</h3>
+                <ul>
+                    <li><strong>The Aegis Firewall:</strong> An impenetrable defense system that adapts to new threats automatically</li>
+                    <li><strong>Owl Search Engine:</strong> A knowledge discovery tool that indexes even the most obscure information</li>
+                    <li><strong>The Adaptive Spear:</strong> A penetration testing framework that can identify vulnerabilities in any system</li>
+                </ul>
+                
+                <h3>Pirate Encounters</h3>
+                <p>Cyber pirates encounter Minerva when dealing with advanced security systems or when seeking knowledge in secure databases. She appears as sudden insights, elegant code solutions, or as warning signs before security breaches. Minerva respects methodical and thoughtful approaches—pirates who plan their operations carefully and demonstrate technical excellence may earn her favor. She disdains brute force attacks and may actively counter pirates who rely solely on overwhelming systems rather than understanding them.</p>
+                
+                <h3>Historical Information</h3>
+                <p>Minerva was one of the Capitoline Triad of deities (along with Jupiter and Juno) who were regarded as the protectors of Rome. Her major festival, the Quinquatria, was celebrated from March 19-23. Minerva was associated with the olive tree and the owl, symbols of peace and wisdom respectively. Craftspeople, teachers, students, and physicians all sought her patronage. Unlike many Roman adaptations of Greek deities, Minerva's character remained very close to that of Athena, emphasizing her strategic importance to Roman culture.</p>
+            </div>
+        </section>
+
+        <section class="treasure-map" id="roadmap">
+            <h2>Future Pantheons Roadmap</h2>
+            <p>Ahoy, cyber pirates! Here lies the map to our expanding digital seas and the divine powers that await discovery. Set yer course by these stars and prepare to encounter myths from across the world's oceans of knowledge!</p>
+
+            <div class="pantheon-route">
+                <h3>Greek Expansion</h3>
+                <p>The first waters beyond the Roman shores - delve deeper into the original myths that inspired the Roman pantheon.</p>
+                <div class="route-path">
+                    <div class="route-point"></div>
+                    <div class="route-line"></div>
+                    <div class="route-point"></div>
+                </div>
+                <p><em>ETA: Two moons from now</em></p>
+            </div>
+
+            <div class="pantheon-route">
+                <h3>Norse Digital Realms</h3>
+                <p>Sail north to encounter the Aesir and Vanir gods in their digital manifestations - where Yggdrasil becomes the world-spanning network.</p>
+                <div class="route-path">
+                    <div class="route-point"></div>
+                    <div class="route-line"></div>
+                    <div class="route-point"></div>
+                </div>
+                <p><em>ETA: When the winter winds blow</em></p>
+            </div>
+
+            <div class="pantheon-route">
+                <h3>Egyptian Technological Mysteries</h3>
+                <p>The ancient digital guardians of knowledge and rebirth await in the encrypted tombs and server pyramids.</p>
+                <div class="route-path">
+                    <div class="route-point"></div>
+                    <div class="route-line"></div>
+                    <div class="route-point"></div>
+                </div>
+                <p><em>ETA: When the digital sun rises anew</em></p>
+            </div>
+
+            <div class="pantheon-route">
+                <h3>Eastern Digital Philosophies</h3>
+                <p>Journey to encounter the hindi deities, Japanese kami, and Chinese celestial bureaucracy in their network incarnations.</p>
+                <div class="route-path">
+                    <div class="route-point"></div>
+                    <div class="route-line"></div>
+                    <div class="route-point"></div>
+                </div>
+                <p><em>ETA: When the eastern servers awaken</em></p>
+            </div>
+
+            <p class="text-center mt-4">X marks the spot for treasures untold and knowledge long forgotten!</p>
+        </section>
+        
+        <section>
+            <h2>The Pantheon</h2>
+            <p>Explore the digital domains of the Roman pantheon. Click on a deity to learn more about their classical origins and cyber incarnations.</p>
+                                
+           <div class="deity-grid">
+                <div class="deity-preview jupiter-color" id="jupiter-preview">
+                    <h3>Jupiter</h3>
+                    <p>The All-Father of Computing. The System Administrator of the Gods.</p>
+                    <a href="#jupiter">View Jupiter's Domain</a>
+                </div>
+                
+                <div class="deity-preview" id="neptune-preview">
+                    <h3>Neptune</h3>
+                    <p>Lord of the Digital Sea. Master of Data Currents.</p>
+                    <a href="#neptune">View Neptune's Domain</a>
+                </div>
+                
+                <div class="deity-preview" id="mercury-preview">
+                    <h3>Mercury</h3>
+                    <p>The Messenger. God of Networks and Communication Protocols.</p>
+                    <a href="#mercury">View Mercury's Domain</a>
+                </div>
+                
+                <div class="deity-preview" id="minerva-preview">
+                    <h3>Minerva</h3>
+                    <p>Goddess of Wisdom and Strategic Code. The Divine Programmer.</p>
+                    <a href="#minerva">View Minerva's Domain</a>
+                </div>
+                
+                <div class="deity-preview venus-color" id="venus-preview">
+                    <h3>Venus</h3>
+                    <p>Goddess of User Experience and Virtual Relationships.</p>
+                    <a href="#venus">View Venus's Domain</a>
+                </div>
+                
+                <div class="deity-preview mars-color" id="mars-preview">
+                    <h3>Mars</h3>
+                    <p>God of Cybersecurity and Digital Warfare.</p>
+                    <a href="#mars">View Mars's Domain</a>
+                </div>
+                
+                <div class="deity-preview apollo-color" id="apollo-preview">
+                    <h3>Apollo</h3>
+                    <p>God of Digital Arts and Predictive Analytics.</p>
+                    <a href="#apollo">View Apollo's Domain</a>
+                </div>
+                
+                <div class="deity-preview diana-color" id="diana-preview">
+                    <h3>Diana</h3>
+                    <p>Goddess of Digital Wildlife and Privacy.</p>
+                    <a href="#diana">View Diana's Domain</a>
+                </div>
+                
+                <div class="deity-preview vulcan-color" id="vulcan-preview">
+                    <h3>Vulcan</h3>
+                    <p>God of Hardware and Digital Forges.</p>
+                    <a href="#vulcan">View Vulcan's Domain</a>
+                </div>
+                
+                <div class="deity-preview ceres-color" id="ceres-preview">
+                    <h3>Ceres</h3>
+                    <p>Goddess of Data Storage and Resource Management.</p>
+                    <a href="#ceres">View Ceres's Domain</a>
+                </div>
+                
+                <div class="deity-preview bacchus-color" id="bacchus-preview">
+                    <h3>Bacchus</h3>
+                    <p>God of Virtual Reality and Digital Experiences.</p>
+                    <a href="#bacchus">View Bacchus's Domain</a>
+                </div>
+                
+                <div class="deity-preview pluto-color" id="pluto-preview">
+                    <h3>Pluto</h3>
+                    <p>God of Deleted Data and the Digital Underworld.</p>
+                    <a href="#pluto">View Pluto's Domain</a>
+                </div>
+            </div>
+        </section>
+        <footer>
+            <p>© 2023 Gods of the Cyberseas: A Pirate Adventure. All rights reserved.</p>
+    </footer>
+</body>
+</html>
