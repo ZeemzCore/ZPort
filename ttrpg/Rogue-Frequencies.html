@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rogue Frequencies: A Pirate Radio TTRPG</title>
+  <style>
+    :root {
+      --primary-color: #0a0a23;
+      --secondary-color: #2a9d8f;
+      --accent-color: #e63946;
+      --text-color: #e0e0e0;
+      --header-color: #f4a261;
+      --bg-color: #121212;
+    }
+    
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      border-bottom: 2px solid var(--secondary-color);
+      padding-bottom: 20px;
+    }
+    
+    h1 {
+      color: var(--header-color);
+      font-size: 2.5rem;
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+    }
+    
+    h2 {
+      color: var(--secondary-color);
+      font-size: 1.8rem;
+      border-bottom: 1px dashed var(--secondary-color);
+      padding-bottom: 5px;
+    }
+    
+    h3 {
+      color: var(--header-color);
+      font-size: 1.4rem;
+    }
+    
+    .container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    
+    @media (min-width: 768px) {
+      .container {
+        grid-template-columns: 230px 1fr;
+      }
+    }
+    
+    nav {
+      background-color: var(--primary-color);
+      padding: 15px;
+      border-radius: 5px;
+      position: sticky;
+      top: 20px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    nav ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    
+    nav li {
+      margin-bottom: 10px;
+    }
+    
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      display: block;
+      padding: 5px;
+      border-left: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+    
+    nav a:hover {
+      border-left: 3px solid var(--accent-color);
+      color: var(--accent-color);
+      padding-left: 10px;
+    }
+    
+    .content {
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 25px;
+      border-radius: 5px;
+      border-left: 4px solid var(--secondary-color);
+    }
+    
+    .stat-block {
+      background-color: rgba(42, 157, 143, 0.1);
+      border: 1px solid var(--secondary-color);
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 5px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #444;
+	  }
+    
+    th {
+      background-color: var(--primary-color);
+      color: var(--secondary-color);
+    }
+    
+    tr:nth-child(even) {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    
+    .radio-wave {
+      height: 40px;
+      position: relative;
+      margin: 30px 0;
+    }
+    
+    .radio-wave::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--accent-color) 20%, 
+        var(--secondary-color) 50%,
+        var(--accent-color) 80%,  
+        transparent 100%);
+    }
+    
+    .dice {
+      color: var(--accent-color);
+      font-weight: bold;
+    }
+    
+    .character-sheet {
+      border: 2px solid var(--secondary-color);
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 5px;
+      background-color: rgba(10, 10, 35, 0.5);
+    }
+    
+    .logo {
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: var(--header-color);
+      text-shadow: 3px 3px 0px var(--primary-color);
+      letter-spacing: -2px;
+    }
+    
+    .tagline {
+      font-style: italic;
+      color: var(--secondary-color);
+      margin-bottom: 20px;
+    }
+    
+    .alert {
+      background-color: rgba(230, 57, 70, 0.2);
+      border-left: 4px solid var(--accent-color);
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 0 5px 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">ROGUE FREQUENCIES</div>
+    <div class="tagline">A Tabletop RPG of Underground Radio Rebellion</div>
+    <p>Broadcast your truth. Evade the authorities. Change the world.</p>
+  </header>
+  
+  <div class="container">
+    <nav>
+      <ul>
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#core-mechanics">Core Mechanics</a></li>
+        <li><a href="#character-creation">Character Creation</a></li>
+        <li><a href="#skills">Skills & Abilities</a></li>
+        <li><a href="#equipment">Equipment</a></li>
+        <li><a href="#broadcasting">Broadcasting</a></li>
+        <li><a href="#heat">Heat & Enforcement</a></li>
+        <li><a href="#the-frequency-drift">The Frequency Drift</a></li>
+        <li><a href="#running-the-game">Running the Game</a></li>
+        <li><a href="#adventures">Sample Adventures</a></li>
+        <li><a href="#appendix">Appendix: Radio Terms</a></li>
+      </ul>
+    </nav>
+    
+    <div class="content">
+      <section id="introduction">
+        <h2>Introduction</h2>
+        <p>Welcome to <strong>Rogue Frequencies</strong>, a tabletop roleplaying game where players take on the roles of pirate radio operators in a world where the airwaves are tightly controlled, and free speech is increasingly restricted.</p>
+        
+        <p>In this game, you and your fellow operators run clandestine radio stations, broadcasting music, news, and ideas that the authorities don't want heard. You'll build transmitters, find secure locations, create compelling content, and try to grow your audience while evading detection and capture.</p>
+        
+        <div class="radio-wave"></div>
+        
+        <h3>The Setting</h3>
+        <p>Rogue Frequencies can be set in various time periods and locations:</p>
+        <ul>
+          <li><strong>Modern Day:</strong> In an era of media consolidation and internet surveillance</li>
+          <li><strong>1970s-80s:</strong> The golden age of European offshore pirate radio</li>
+          <li><strong>Near Future:</strong> Where all media is corporate-controlled and censored</li>
+          <li><strong>Alternate History:</strong> Where authoritarian governments control all communication</li>
+        </ul>
+        
+        <p>The default setting is the present day in a slightly dystopian version of our world, where corporate interests and government censorship have reduced mainstream media to propaganda outlets, and the internet is heavily monitored. Pirate radio has experienced a renaissance as one of the last truly free forms of mass communication.</p>
+      </section>
+      
+      <div class="radio-wave"></div>
+      
+      <section id="core-mechanics">
+        <h2>Core Mechanics</h2>
+        
+        <h3>The Basics</h3>
+        <p>Rogue Frequencies uses a d10-based system where players roll a number of ten-sided dice equal to their relevant attribute plus skill, counting successes on results of 7 or higher.</p>
+        
+        <div class="stat-block">
+          <p><strong>Task Resolution:</strong> Roll [Attribute + Skill] dice. Each die showing 7 or higher is a success.</p>
+          <p><strong>Difficulty Levels:</strong></p>
+          <ul>
+            <li>Easy: 1 success required</li>
+            <li>Moderate: 2 successes required</li>
+            <li>Difficult: 3 successes required</li>
+            <li>Challenging: 4 successes required</li>
+            <li>Extreme: 5+ successes required</li>
+          </ul>
+          <p><strong>Critical Success:</strong> If more than half your dice show successes</p>
+          <p><strong>Critical Failure:</strong> If you roll no successes and at least one die shows a 1</p>
+        </div>
+        
+        <h3>Core Concepts</h3>
+        <p>Three key mechanics drive the tension in the game:</p>
+        
+        <ul>
+          <li><strong>Signal Strength:</strong> How far your broadcast reaches and how clear it sounds</li>
+          <li><strong>Audience:</strong> The size and loyalty of your listenership</li>
+          <li><strong>Heat:</strong> How much attention you've attracted from the authorities</li>
+        </ul>
+        
+        <p>Balancing these three elements creates the central tension of the game. A stronger signal reaches more people but generates more heat. More compelling content builds audience but might be more controversial and increase heat.</p>
+      </section>
+      
+      <div class="radio-wave"></div>
+      
+      <section id="character-creation">
+        <h2>Character Creation</h2>
+        
+        <h3>Attributes</h3>
+        <p>Characters have four primary attributes:</p>
+        
+        <div class="stat-block">
+          <ul>
+            <li><strong>Technical (TECH):</strong> Knowledge of electronics, broadcasting equipment, and technical skills</li>
+            <li><strong>Presence (PRES):</strong> Charisma, voice quality, and ability to engage an audience</li>
+            <li><strong>Wits (WITS):</strong> Quick thinking, situational awareness, and problem-solving</li>
+            <li><strong>Nerve (NERVE):</strong> Courage, stress resistance, and ability to function under pressure</li>
+          </ul>
+        </div>
+        
+        <p>Distribute 12 points among these attributes, with a minimum of 1 and maximum of 5 in each.</p>
+        
+        <h3>Skills</h3>
+        <p>Characters have skills in various areas relevant to pirate radio operation. Each character starts with 15 skill points to distribute, with a maximum of 3 in any skill at character creation.</p>
+        
+        <table>
+          <tr>
+            <th>Technical Skills</th>
+            <th>Social Skills</th>
+            <th>Practical Skills</th>
+          </tr>
+          <tr>
+            <td>Electronics</td>
+            <td>Performance</td>
+            <td>Stealth</td>
+          </tr>
+          <tr>
+            <td>Broadcasting</td>
+            <td>Negotiation</td>
+            <td>Security</td>
+          </tr>
+          <tr>
+            <td>Computers</td>
+            <td>Streetwise</td>
+            <td>Driving</td>
+          </tr>
+          <tr>
+            <td>Audio Engineering</td>
+            <td>Deception</td>
+            <td>Scrounging</td>
+          </tr>
+          <tr>
+            <td>Radio Theory</td>
+            <td>Intimidation</td>
+            <td>Surveillance</td>
+          </tr>
+        </table>
+        
+        <h3>Operator Type</h3>
+        <p>Choose an operator type that defines your character's primary role:</p>
+        
+        <ul>
+          <li><strong>Tech Genius:</strong> The engineer who builds and maintains equipment (+1 TECH, +2 Electronics)</li>
+          <li><strong>Silver-Tongued DJ:</strong> The charismatic voice of the station (+1 PRES, +2 Performance)</li>
+          <li><strong>Veteran Scout:</strong> Finds safe broadcast locations and evades authorities (+1 WITS, +2 Security)</li>
+          <li><strong>Community Organizer:</strong> Builds listener base and manages resources (+1 NERVE, +2 Streetwise)</li>
+          <li><strong>Media Hacker:</strong> Specializes in digital integration and social media amplification (+1 TECH, +2 Computers)</li>
+        </ul>
+        
+        <h3>Background</h3>
+        <p>Choose or create a background that explains why your character became involved in pirate radio:</p>
+        
+        <ul>
+          <li>Former mainstream media professional disillusioned with censorship</li>
+          <li>Political activist seeking to spread a message</li>
+          <li>Music enthusiast frustrated with commercial radio playlists</li>
+          <li>Technical hobbyist fascinated by radio technology</li>
+          <li>Community leader trying to reach an underserved population</li>
+          <li>Whistleblower with secrets that need to be broadcast</li>
+        </ul>
+        
+        <h3>Handle & Station</h3>
+        <p>Create your radio handle (on-air name) and contribute to the group's station identity. Together, the group should decide on:</p>
+        <ul>
+          <li>Station name</li>
+          <li>Broadcast format (music, talk, news, etc.)</li>
+          <li>Target audience</li>
+          <li>Station motto or slogan</li>
+        </ul>
+        
+        <div class="character-sheet">
+          <h3>Sample Character: "Frequency Phil"</h3>
+          <p><strong>Attributes:</strong> TECH 4, PRES 3, WITS 3, NERVE 2</p>
+          <p><strong>Skills:</strong> Electronics 3, Broadcasting 3, Computers 2, Audio Engineering 2, Performance 2, Stealth 1, Scrounging 2</p>
+          <p><strong>Operator Type:</strong> Tech Genius</p>
+          <p><strong>Background:</strong> Former HAM radio enthusiast who discovered the power of broadcasting during a natural disaster when official communications failed</p>
+          <p><strong>Handle:</strong> "Frequency Phil"</p>
+          <p><strong>Station:</strong> "Wavelength Liberation Front" - An eclectic mix of forgotten music and uncomfortable truths</p>
+        </div>
+      </section>
+      
+      <div class="radio-wave"></div>
+      
+      <section id="skills">
+        <h2>Skills & Abilities</h2>
+        
+        <h3>Technical Skills</h3>
+        <p><strong>Electronics:</strong> Building, repairing, and modifying broadcast equipment</p>
+        <p><strong>Broadcasting:</strong> Knowledge of radio transmission techniques and regulations</p>
+        <p><strong>Computers:</strong> Using digital tools, streaming, and online amplification</p>
+        <p><strong>Audio Engineering:</strong> Creating high-quality audio productions</p>
+        <p><strong>Radio Theory:</strong> Understanding wave propagation, antenna design, and frequency behavior</p>
+        
+        <h3>Social Skills</h3>
+        <p><strong>Performance:</strong> On-air presence, voice work, and audience engagement</p>
+        <p><strong>Negotiation:</strong> Acquiring equipment, locations, and allies</p>
+        <p><strong>Streetwise:</strong> Navigating underground communities and finding resources</p>
+        <p><strong>Deception:</strong> Misleading authorities and maintaining cover identities</p>
+        <p><strong>Intimidation:</strong> Discouraging snitches and asserting boundaries</p>
+        
+        <h3>Practical Skills</h3>
+        <p><strong>Stealth:</strong> Setting up and operating without being noticed</p>
+        <p><strong>Security:</strong> Counter-surveillance and secure practices</p>
+        <p><strong>Driving:</strong> Mobile broadcasting and quick getaways</p>
+        <p><strong>Scrounging:</strong> Finding and repurposing materials and equipment</p>
+        <p><strong>Surveillance:</strong> Spotting and evading enforcement agents</p>
+        
+        <h3>Special Abilities</h3>
+        <p>Characters gain special abilities as they advance. Each operator type has unique abilities, and general abilities are available to all characters.</p>
+        
+        <div class="stat-block">
+          <h4>Example Tech Genius Abilities:</h4>
+          <ul>
+            <li><strong>Frequency Hopper:</strong> Can quickly change broadcast frequency while maintaining signal quality</li>
+            <li><strong>Signal Booster:</strong> Can temporarily increase signal strength without proportional heat increase</li>
+            <li><strong>Quick Fix:</strong> Can repair damaged equipment in half the normal time</li>
+          </ul>
+          
+          <h4>Example Silver-Tongued DJ Abilities:</h4>
+          <ul>
+            <li><strong>Golden Voice:</strong> +2 dice on Performance checks for on-air content</li>
+            <li><strong>Audience Connection:</strong> Can maintain audience even during technical difficulties</li>
+            <li><strong>Improvisation Master:</strong> Never at a loss for words; can fill dead air effortlessly</li>
+          </ul>
+        </div>
+      </section>
+      
+      <div class="radio-wave"></div>
+      
+      <section id="equipment">
+        <h2>Equipment</h2>
+        
+        <p>Equipment in Rogue Frequencies is crucial for successful broadcasting. Players will acquire, build, and upgrade their gear throughout the campaign.</p>
+        
+        <h3>Transmitter Components</h3>
+        <table>
+          <tr>
+            <th>Component</th>
+            <th>Effect</th>
+            <th>Cost (Resources)</th>
+          </tr>
+          <tr>
+            <td>Basic Transmitter</td>
+            <td>Signal Strength 1, Range 5 miles</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>Intermediate Transmitter</td>
+            <td>Signal Strength 2, Range 15 miles</td>
+            <td>6</td>
+          </tr>
+          <tr>
+            <td>Advanced Transmitter</td>
+            <td>Signal Strength 3, Range 30 miles</td>
+            <td>9</td>
+          </tr>
+          <tr>
+            <td>Professional Transmitter</td>
+            <td>Signal Strength 4, Range 50+ miles</td>
+            <td>12</td>
+          </tr>
+          <tr>
+            <td>Basic Antenna</td>
+            <td>Standard reception</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>Directional Antenna</td>
+            <td>Focused signal in specific direction</td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td>Stealth Antenna</td>
+            <td>-2 to detection checks</td>
+            <td>5</td>
+          </tr>
+        </table>
+        
+        <h3>Audio Equipment</h3>
+        <table>
+          <tr>
+            <th>Equipment</th>
+            <th>Effect</th>
+            <th>Cost (Resources)</th>
+          </tr>
+          <tr>
+            <td>Basic Microphone</td>
+            <td>Standard voice clarity</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>Studio Microphone</td>
+            <td>+1 to Performance checks</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>Portable Mixer</td>
+            <td>Allows multiple audio inputs</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>Professional Mixing Console</td>
+            <td>+2 to Audio Engineering checks</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>Portable Recorder</td>
+            <td>Capture interviews and field audio</td>
+            <td>2</td>
+          </tr>
+        </table>
+        
+        <h3>Security Equipment</h3>
+        <table>
+          <tr>
+            <th>Equipment</th>
+            <th>Effect</th>
+            <th>Cost (Resources)</th>
+          </tr>
+          <tr>
+            <td>Scanner</td>
+            <td>Monitor enforcement frequencies</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>Frequency Analyzer</td>
+            <td>Detect frequency usage in area</td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td>Remote Switch</td>
+            <td>Turn equipment on/off from distance</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>Camouflage Kit</td>
+            <td>-2 to visual detection of equipment</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>Dummy Load</td>
+            <td>Test transmitter without broadcasting</td>
+            <td>1</td>
+          </tr>
+        </table>
+        
+        <h3>Resources & Acquisition</h3>
+        <p>Each character starts with Resources equal to their [WITS + Scrounging + 3]. Resources can be spent to acquire equipment, pay for secure locations, or bribe potential informants.</p>
+        
+        <p>Resources can be replenished through:</p>
+        <ul>
+          <li>Listener donations (based on Audience rating)</li>
+          <li>Scrounging rolls (WITS + Scrounging)</li>
+          <li>Trading information or services with other underground groups</li>
+          <li>Taking on side jobs with skills your character possesses</li>
+        </ul>
+      </section>
+      
+      <div class="radio-wave"></div>
+      
+      <section id="broadcasting">
+        <h2>Broadcasting</h2>
+        
+        <p>The core activity in Rogue Frequencies is creating and transmitting radio content. This involves several steps:</p>
+        
+        <h3>1. Finding a Location</h3>
+        <p>Characters must find suitable broadcast locations that balance signal quality with security. This requires a WITS + Security check. The GM assigns bonuses or penalties based on the location's features.</p>
+        
+        <div class="stat-block">
+          <h4>Location Factors:</h4>
+          <ul>
+            <li>Elevation (+1 to Signal Strength per 100ft above surrounding area)</li>
+            <li>Urban density (-1 to Security, +1 to potential Audience)</li>
+            <li>Remote areas (+1 to Security, -1 to potential Audience)</li>
+            <li>Previous use (-2 to Security if location was used recently)</li>
+            <li>Natural barriers (mountains, valleys can provide signal focusing or shielding)</li>
+          </ul>
+        </div>
+        
+        <h3>2. Setting Up Equipment</h3>
+        <p>This requires a TECH + Electronics check. Success means the equipment works as intended; exceptional success improves Signal Strength by 1; failure means technical problems; critical failure could mean damaged equipment.</p>
+        
+        <h3>3. Creating Content</h3>
+        <p>Characters create content using PRES + Performance checks. The quality and appeal of content determines audience growth:</p>
+        
+        <div class="stat-block">
+          <h4>Content Examples:</h4>
+          <ul>
+            <li>Music programs (underground bands, banned music)</li>
+            <li>News and commentary (uncensored, alternative perspectives)</li>
+            <li>Community information (protests, events, warnings)</li>
+            <li>Political content (calls to action, exposés)</li>
+            <li>Cultural material (art, poetry, stories)</li>
+          </ul>
+        </div>
+        
+        <h3>4. Managing Transmission</h3>
+        <p>During broadcasting, characters must monitor for interference, avoid detection, and maintain signal quality using TECH + Broadcasting checks.</p>
+        
+        <h3>Audience Building</h3>
+        <p>Audience is tracked on a 10-point scale, starting at 0 (no listeners) to 10 (massive following). Successful broadcasts add points to Audience based on content quality and Signal Strength. Audience decays between broadcasts if too much time passes.</p>
+        
+        <div class="alert">
+          <p><strong>Example:</strong> A successful music broadcast with 3 successes on a Performance check and Signal Strength 2 would add 5 points to Audience, up to the maximum of 10.</p>
+        </div>
+        
+        <h3>Audience Benefits</h3>
+        <p>Higher Audience ratings provide benefits:</p>
+        <ul>
+          <li>Resources through donations</li>
+          <li>Information from listeners (tips about enforcement activity)</li>
+          <li>Potential new locations suggested by supporters</li>
+          <li>Political or social impact on the game world</li>
+        </ul>
+      </section>
+      
+      <div class="radio-wave"></div>
+      
+      <section id="heat">
+        <h2>Heat & Enforcement</h2>
+        
+        <p>As pirate broadcasters, characters must constantly evade the authorities. Heat represents how much attention they've attracted.</p>
+        
+        <h3>Heat Mechanics</h3>
+        <p>Heat is tracked on a scale from 0 (completely under the radar) to 10 (highest priority target). Various actions increase Heat:</p>
+        
+        <ul>
+          <li>Broadcasting increases Heat based on Signal Strength and duration</li>
+          <li>Controversial content adds additional Heat</li>
+          <li>Using the same location repeatedly adds cumulative Heat</li>
+          <li>Broadcasting during enforcement "sweeps" adds significant Heat</li>
+        </ul>
+        
+        <p>Heat naturally decreases over time if the station remains inactive, but at the cost of losing Audience.</p>
+        
+        <h3>Enforcement Actions</h3>
+        <p>When Heat reaches certain thresholds, enforcement actions occur:</p>
+        
+        <div class="stat-block">
+          <ul>
+            <li><strong>Heat 3:</strong> Monitoring begins, signal analysis</li>
+            <li><strong>Heat 5:</strong> Active triangulation attempts during broadcasts</li>
+            <li><strong>Heat 7:</strong> Surveillance of suspected operators, informant recruitment</li>
+            <li><strong>Heat 9+:</strong> Raids on suspected locations, arrests, equipment seizure</li>
+          </ul>
+        </div>
+        
+        <h3>Evasion Tactics</h3>
+        <p>Characters can employ various tactics to reduce Heat or evade enforcement:</p>
+        
+        <ul>
+          <li><strong>Frequency hopping:</strong> TECH + Broadcasting check to change frequencies mid-broadcast</li>
+          <li><strong>Mobile broadcasting:</strong> WITS + Driving check to broadcast while in motion</li>
+          <li><strong>Decoy transmitters:</strong> TECH + Electronics to create diversions</li>
+          <li><strong>Counter-surveillance:</strong> WITS + Security to detect and evade monitoring</li>
+          <li><strong>Going digital:</strong> TECH + Computers to integrate internet streaming as backup</li>
+        </ul>
+      </section>
+      
+      <div class="radio-wave"></div>
+      
+      <section id="the-frequency-drift">
+        <h2>The Frequency Drift</h2>
+        
+        <p>The Frequency Drift tavern serves as a central hub for the pirate radio community and a cornerstone of the game.</p>
+        
+        <h3>Hub Mechanics</h3>
+        <p>Characters can visit The Frequency Drift between broadcasts to:</p>
+        <ul>
+          <li>Trade equipment and resources</li>
+          <li>Gather information about enforcement activity</li>
+          <li>Recruit allies and collaborators</li>
+          <li>Learn new techniques and upgrades</li>
+          <li>Coordinate with other stations</li>
+        </ul>
+        
+        <h3>Notable NPCs</h3>
+        <p>The staff and regulars at The Frequency Drift provide opportunities for roleplay and advancement:</p>
+        
+        <div class="stat-block">
+          <ul>
+            <li><strong>"Bandwidth Bill" (Proprietor):</strong> Can teach advanced Technical skills and has connections to rare equipment</li>
+            <li><strong>"Antenna Annie" (Bartender):</strong> Gathers rumors and information about enforcement activity</li>
+            <li><strong>"The Jammer" (Bouncer):</strong> Expert in counter-surveillance and security measures</li>
+            <li><strong>Shortwave Sally:</strong> Veteran broadcaster who can mentor characters in Performance</li>
+            <li><strong>The Nocturnal DXers:</strong> Group who can help extend broadcast range through technical tricks</li>
+            <li><strong>Professor Airwave:</strong> Can teach new skills and technical knowledge</li>
+          </ul>
+        </div>
+        
+        <h3>Reputation</h3>
+        <p>Characters build reputation at The Frequency Drift through successful broadcasts and helping the community. Higher reputation unlocks:</p>
+        <ul>
+          <li>Access to The Secret Frequency (inner sanctum)</li>
+          <li>Advanced equipment trading</li>
+          <li>Priority information about enforcement</li>
+          <li>Collaboration opportunities with major underground figures</li>
+        </ul>
+      </section>
+      
+      <div class="radio-wave"></div>
+      
+      <section id="running-the-game">
+        <h2>Running the Game</h2>
+        
+        <h3>Session Structure</h3>
+        <p>A typical Rogue Frequencies session includes:</p>
+        <ol>
+          <li>Planning phase: deciding content and location</li>
+          <li>Preparation phase: acquiring equipment and setting up</li>
+          <li>Broadcast phase: creating content and managing transmission</li>
+          <li>Aftermath phase: dealing with consequences and planning next steps</li>
+        </ol>
+        
+        <h3>Game Master Guidance</h3>
+        <p>The GM creates the world and enforcement response, balancing challenge with opportunity:</p>
+        <ul>
+          <li>Create engaging NPCs representing both allies and adversaries</li>
+          <li>Develop the impact of broadcasts on the game world</li>
+          <li>Manage Heat and enforcement...</li>
+        </ul>
+      </section>
