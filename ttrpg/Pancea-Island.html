@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TTRPG: Voyage to the Island of Panacea</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #3a6e7f;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+    }
+    .container {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .content {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .left {
+      width: 48%;
+    }
+    .right {
+      width: 48%;
+    }
+    .map {
+      width: 100%;
+      height: 300px;
+      background-color: #dcdcdc;
+      border: 1px solid #999;
+      text-align: center;
+      line-height: 300px;
+      color: #333;
+    }
+    .crew, .actions {
+      list-style-type: none;
+      padding: 0;
+    }
+    .crew li, .actions li {
+      margin: 10px 0;
+    }
+    .crew li span, .actions li span {
+      font-weight: bold;
+    }
+    footer {
+      background-color: #3a6e7f;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Voyage to the Island of Panacea</h1>
+    <p>The crew must navigate treacherous waters to reach the island and find the mystical herb.</p>
+  </header>
+
+  <div class="container">
+    <div class="content">
+      <div class="left">
+        <h2>Mission Overview</h2>
+        <p>The crew is on a perilous journey to a mysterious island rumored to house the Panacea herb, a mystical plant known for its healing powers. However, treacherous waters filled with storms, sea creatures, and other dangers lie ahead.</p>
+
+        <h3>Treacherous Waters</h3>
+        <ul>
+          <li><span>Storms:</span> Sudden and unpredictable weather changes.</li>
+          <li><span>Sea Creatures:</span> Massive, dangerous creatures lurking beneath the waves.</li>
+          <li><span>Hidden Rocks:</span> Sharp rocks just below the water's surface.</li>
+          <li><span>Rival Pirates:</span> Pirates looking for treasure and willing to attack.</li>
+        </ul>
+      </div>
+
+      <div class="right">
+        <h2>Ship's Crew</h2>
+        <ul class="crew">
+          <li><span>Captain:</span> The leader of the crew, skilled in navigation and combat.</li>
+          <li><span>Navigator:</span> The expert in maps, charts, and weather patterns.</li>
+          <li><span>Quartermaster:</span> Responsible for managing the ship's supplies and crew morale.</li>
+          <li><span>Deckhand:</span> A versatile member of the crew, tasked with various ship duties.</li>
+          <li><span>Medic:</span> Knowledgeable in herbal remedies and emergency care.</li>
+        </ul>
+
+        <h3>Actions</h3>
+        <ul class="actions">
+          <li><span>Navigate:</span> Choose the direction and course to avoid dangers.</li>
+          <li><span>Combat:</span> Defend the ship from sea creatures or rival pirates.</li>
+          <li><span>Search:</span> Search the waters or island for hidden treasures or clues.</li>
+          <li><span>Heal:</span> Use medicinal herbs or bandages to treat injured crew members.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="map">
+      <p>Map of the Waters</p>
+      <p>Imagine your ship navigating through these treacherous waters towards the mystical island.</p>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 - Adventure awaits on the high seas!</p>
+  </footer>
+</body>
+</html>
+
+***** ***** *****
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TTRPG: Voyage to the Island of Panacea</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #3a6e7f;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+    }
+    .container {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .content {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .left {
+      width: 48%;
+    }
+    .right {
+      width: 48%;
+    }
+    .map {
+      width: 100%;
+      height: 300px;
+      background-color: #dcdcdc;
+      border: 1px solid #999;
+      text-align: center;
+      line-height: 300px;
+      color: #333;
+    }
+    .crew, .actions {
+      list-style-type: none;
+      padding: 0;
+    }
+    .crew li, .actions li {
+      margin: 10px 0;
+    }
+    .crew li span, .actions li span {
+      font-weight: bold;
+    }
+    footer {
+      background-color: #3a6e7f;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+    .dice-container {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .dice-btn {
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      background-color: #3a6e7f;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    .dice-result {
+      font-size: 24px;
+      margin-top: 20px;
+    }
+    .instructions {
+      margin-top: 30px;
+    }
+    .printables {
+      margin-top: 30px;
+      text-align: center;
+    }
+    .printables a {
+      padding: 10px 20px;
+      background-color: #3a6e7f;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Voyage to the Island of Panacea</h1>
+    <p>The crew must navigate treacherous waters to reach the island and find the mystical herb.</p>
+  </header>
+
+  <div class="container">
+    <div class="content">
+      <div class="left">
+        <h2>Mission Overview</h2>
+        <p>The crew embarks on a perilous journey to a mysterious island rumored to house the Panacea herb, a mystical plant known for its healing powers. However, treacherous waters filled with storms, sea creatures, and other dangers lie ahead.</p>
+
+        <h3>Treacherous Waters</h3>
+        <ul>
+          <li><span>Storms:</span> Sudden and unpredictable weather changes.</li>
+          <li><span>Sea Creatures:</span> Massive, dangerous creatures lurking beneath the waves.</li>
+          <li><span>Hidden Rocks:</span> Sharp rocks just below the water's surface.</li>
+          <li><span>Rival Pirates:</span> Pirates looking for treasure and willing to attack.</li>
+        </ul>
+      </div>
+
+      <div class="right">
+        <h2>Ship's Crew</h2>
+        <ul class="crew">
+          <li><span>Captain:</span> The leader of the crew, skilled in navigation and combat.</li>
+          <li><span>Navigator:</span> The expert in maps, charts, and weather patterns.</li>
+          <li><span>Quartermaster:</span> Responsible for managing the ship's supplies and crew morale.</li>
+          <li><span>Deckhand:</span> A versatile member of the crew, tasked with various ship duties.</li>
+          <li><span>Medic:</span> Knowledgeable in herbal remedies and emergency care.</li>
+        </ul>
+
+        <h3>Actions</h3>
+        <ul class="actions">
+          <li><span>Navigate:</span> Choose the direction and course to avoid dangers.</li>
+          <li><span>Combat:</span> Defend the ship from sea creatures or rival pirates.</li>
+          <li><span>Search:</span> Search the waters or island for hidden treasures or clues.</li>
+          <li><span>Heal:</span> Use medicinal herbs or bandages to treat injured crew members.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="map">
+      <p>Map of the Waters</p>
+      <p>Imagine your ship navigating through these treacherous waters towards the mystical island.</p>
+    </div>
+
+    <div class="dice-container">
+      <button class="dice-btn" onclick="rollDice()">Roll Dice</button>
+      <div class="dice-result" id="dice-result"></div>
+    </div>
+
+    <div class="instructions">
+      <h2>Game Instructions</h2>
+      <h3>For the Game Master (GM):</h3>
+      <p>As the GM, you'll narrate the story, present challenges, and control the actions of non-player characters (NPCs) and the environment. You’ll also roll dice to determine the success or failure of the players' actions, using the rules below:</p>
+      <ul>
+        <li><strong>Dice Roll:</strong> Players roll a D6 (six-sided die) to determine the outcome of actions.</li>
+        <li><strong>Challenges:</strong> Set challenges based on the crew’s action (e.g., navigating the ship through a storm requires a roll of 4 or higher).</li>
+        <li><strong>Success/Failure:</strong> A roll of 4 or higher is a success. A roll of 3 or lower is a failure, leading to consequences.</li>
+      </ul>
+
+      <h3>For the Players:</h3>
+      <p>As players, you will take turns choosing actions such as navigating, searching, or fighting. Each action may require a dice roll to determine its success:</p>
+      <ul>
+        <li><strong>Navigate:</strong> Roll a D6. A roll of 4-6 avoids obstacles, 1-3 leads to complications.</li>
+        <li><strong>Combat:</strong> Roll a D6. A roll of 4-6 hits the enemy, 1-3 misses and exposes the ship to attack.</li>
+        <li><strong>Search:</strong> Roll a D6. A roll of 5-6 finds something valuable, 1-4 yields no results.</li>
+        <li><strong>Heal:</strong> Roll a D6. A roll of 4-6 heals the crew member, 1-3 has no effect.</li>
+      </ul>
+    </div>
+
+    <div class="printables">
+      <h2>Printable Resources</h2>
+      <p>Click the links below to download printable resources for your game:</p>
+      <a href="#" target="_blank">Crew Sheet (PDF)</a>
+      <a href="#" target="_blank">Map of the Waters (PDF)</a>
+      <a href="#" target="_blank">Event Cards (PDF)</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 - Adventure awaits on the high seas!</p>
+  </footer>
+
+  <script>
+    function rollDice() {
+      const diceRoll = Math.floor(Math.random() * 6) + 1;
+      const resultText = `You rolled a ${diceRoll}!`;
+      document.getElementById('dice-result').textContent = resultText;
+    }
+  </script>
+</body>
+</html>
