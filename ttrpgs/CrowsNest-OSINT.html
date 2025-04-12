@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crow's Nest - OSINT Dashboard</title>
+    <style>
+        :root {
+            --primary: #1a2639;
+            --secondary: #3f4e63;
+            --accent: #c19d53;
+            --text: #f5f0e1;
+            --danger: #8b2635;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        
+        body {
+            background-color: var(--primary);
+            color: var(--text);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%233f4e63' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 3px solid var(--accent);
+            margin-bottom: 30px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-right: 10px;
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: var(--secondary);
+            color: var(--accent);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: var(--secondary);
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid var(--accent);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px dashed var(--accent);
+            padding-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .card-badge {
+            background-color: var(--danger);
+            color: var(--text);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+
+        .progress-container {
+            margin: 15px 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar {
+            height: 15px;
+            background-color: var(--primary);
+            border-radius: 7px;
+            overflow: hidden;
+            border: 1px solid var(--accent);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent);
+            width: 0;
+            transition: width 1s ease-in-out;
+        }
+
+        .status-container {
+            margin-top: 15px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px dotted var(--accent);
+        }
+
+        .missions-container {
+            background-color: var(--secondary);
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid var(--accent);
+            margin-bottom: 30px;
+        }
+
+        .missions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px dashed var(--accent);
+            padding-bottom: 10px;
+        }
+
+        .missions-title {
+            font-size: 1.8rem;
+            color: var(--accent);
+        }
+
+        .mission-card {
+            background-color: var(--primary);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--accent);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .mission-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .mission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .mission-title {
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        .mission-reward {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: gold;
+        }
+
+        .mission-description {
+            margin-bottom: 10px;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .mission-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pirate-icon {
+            font-size: 1.5rem;
+            margin-right: 8px;
+        }
+
+        .treasure-chest {
+            background-color: var(--secondary);
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid var(--accent);
+        }
+
+        .treasure-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px dashed var(--accent);
+            padding-bottom: 10px;
+        }
+
+        .treasure-title {
+            font-size: 1.8rem;
+            color: var(--accent);
+        }
+
+        .treasure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .treasure-item {
+            background-color: var(--primary);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid var(--accent);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .treasure-item:hover {
+            transform: scale(1.05);
+        }
+
+        .treasure-icon {
+            font-size: 2rem;
+            color: gold;
+            margin-bottom: 10px;
+        }
+
+        .treasure-name {
+            font-size: 1rem;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .treasure-value {
+            font-size: 0.9rem;
+            color: gold;
+        }
+
+        .btn {
+            background-color: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background-color: gold;
+            transform: translateY(-2px);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .badge-success {
+            background-color: #2e7d32;
+            color: white;
+        }
+
+        .badge-warning {
+            background-color: #f9a825;
+            color: black;
+        }
+
+        .badge-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--secondary);
+            border-radius: 10px;
+            padding: 30px;
+            border: 3px solid var(--accent);
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--accent);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            border-bottom: 2px dashed var(--accent);
+            padding-bottom: 10px;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            color: var(--accent);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            border-top: 3px solid var(--accent);
+            color: var(--text);
+        }
+
+        .pirate-quote {
+            font-style: italic;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+                flex-wrap: wrap;
+            }
+            
+            .treasure-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <span class="logo">☠️</span>
+                <h1 class="title">Crow's Nest OSINT</h1>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="nav-link">Map</a>
+                <a href="#" class="nav-link">Voyages</a>
+                <a href="#" class="nav-link">Logbook</a>
+                <a href="#" class="nav-link">Treasure</a>
+            </nav>
+        </header>
+
+        <p class="pirate-quote">"Information be the treasure that keeps on givin', matey!"</p>
+
+        <section class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🔍 Recon Status</h2>
+                    <span class="card-badge">IN PROGRESS</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Social Media</span>
+                        <span>65%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%"></div>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Domain Analysis</span>
+                        <span>80%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 80%"></div>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Dark Web</span>
+                        <span>30%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 30%"></div>
+                    </div>
+                </div>
+                <div class="status-container">
+                    <div class="status-item">
+                        <span>Data Points Collected</span>
+                        <span>247</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Sources Identified</span>
+                        <span>18</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Bounty Earned</span>
+                        <span>320 🪙</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🎯 Target Intel</h2>
+                    <span class="card-badge">4 TARGETS</span>
+                </div>
+                <div class="status-container">
+                    <div class="status-item">
+                        <span>Primary Target</span>
+                        <span class="badge badge-danger">Active</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Secondary Targets</span>
+                        <span class="badge badge-warning">3 Found</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Associated Domains</span>
+                        <span>12</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Email Addresses</span>
+                        <span>27</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Social Profiles</span>
+                        <span>8</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Last Update</span>
+                        <span>2 hours ago</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">📊 Progress</h2>
+                    <span class="card-badge">LEVEL 4</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Experience</span>
+                        <span>1250/1500</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 83%"></div>
+                    </div>
+                </div>
+                <div class="status-container">
+                    <div class="status-item">
+                        <span>Missions Completed</span>
+                        <span>12</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Active Missions</span>
+                        <span>3</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Achievements</span>
+                        <span>7/25</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Total Treasure</span>
+                        <span>1450 🪙</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="missions-container">
+            <div class="missions-header">
+                <h2 class="missions-title">⚓ Current Voyages</h2>
+                <button class="btn" id="new-mission-btn">New Mission</button>
+            </div>
+
+            <div class="mission-card" onclick="openMissionModal('Social Cartography')">
+                <div class="mission-header">
+                    <h3 class="mission-title">Social Cartography</h3>
+                    <div class="mission-reward">150 🪙</div>
+                </div>
+                <p class="mission-description">Map the social media presence of the target organization. Identify key personnel and their connections.</p>
+                <div class="mission-status">
+                    <span class="badge badge-warning">In Progress</span>
+                    <span>Due: 2 days</span>
+                </div>
+            </div>
+
+            <div class="mission-card" onclick="openMissionModal('Domain Plunder')">
+                <div class="mission-header">
+                    <h3 class="mission-title">Domain Plunder</h3>
+                    <div class="mission-reward">200 🪙</div>
+                </div>
+                <p class="mission-description">Analyze all subdomains and associated infrastructure. Look for vulnerabilities and potential entry points.</p>
+                <div class="mission-status">
+                    <span class="badge badge-warning">In Progress</span>
+                    <span>Due: 5 days</span>
+                </div>
+            </div>
+
+            <div class="mission-card" onclick="openMissionModal('Dead Man\'s Cache')">
+                <div class="mission-header">
+                    <h3 class="mission-title">Dead Man's Cache</h3>
+                    <div class="mission-reward">300 🪙</div>
+                </div>
+                <p class="mission-description">Recover data from archived websites and cached pages. Find information that the target thought was buried.</p>
+                <div class="mission-status">
+                    <span class="badge badge-danger">Challenging</span>
+                    <span>Due: 7 days</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="treasure-chest">
+            <div class="treasure-header">
+                <h2 class="treasure-title">💰 Treasure Chest</h2>
+                <span>Total: 1,450 🪙</span>
+            </div>
+
+            <div class="treasure-grid">
+                <div class="treasure-item" onclick="showToast('Advanced search tools unlocked!')">
+                    <div class="treasure-icon">🔎</div>
+                    <div class="treasure-name">Spyglass +2</div>
+                    <div class="treasure-value">350 🪙</div>
+                </div>
+                <div class="treasure-item" onclick="showToast('Metadata extraction tools available!')">
+                    <div class="treasure-icon">🗝️</div>
+                    <div class="treasure-name">Skeleton Key</div>
+                    <div class="treasure-value">500 🪙</div>
+                </div>
+                <div class="treasure-item" onclick="showToast('Dark web access enabled!')">
+                    <div class="treasure-icon">🏴</div>
+                    <div class="treasure-name">Black Flag</div>
+                    <div class="treasure-value">750 🪙</div>
+                </div>
+                <div class="treasure-item" onclick="showToast('Unlock this item with 300 more coins!')">
+                    <div class="treasure-icon">❓</div>
+                    <div class="treasure-name">Locked Item</div>
+                    <div class="treasure-value">300 🪙 more</div>
+                </div>
+            </div>
+        </section>
+
+        <div id="mission-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeMissionModal()">&times;</span>
+                <div class="modal-header">
+                    <h2 class="modal-title" id="mission-modal-title">Mission Details</h2>
+                </div>
+                <div id="mission-details-content">
+                    <!-- Mission details will be populated by JavaScript -->
+                </div>
+                <div style="margin-top: 20px; text-align: right;">
+                    <button class="btn" onclick="closeMissionModal()">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>🏴‍☠️ Crow's Nest OSINT - Master's Thesis Project - 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        // Animate progress bars on load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const progressBars = document.querySelectorAll('.progress-fill');
+                progressBars.forEach(bar => {
+                    const width = bar.style.width;
+                    bar.style.width = 0;
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 100);
+                });
+            }, 300);
+        });
+
+        // Mission modal functionality
+        function openMissionModal(missionName) {
+            const modal = document.getElementById('mission-modal');
+            const modalTitle = document.getElementById('mission-modal-title');
+            const modalContent = document.getElementById('mission-details-content');
+            
+            modal.style.display = 'flex';
+            modalTitle.textContent = missionName;
+            
+            // Mission details content based on which mission was clicked
+            let missionDetails = '';
+            if (missionName === 'Social Cartography') {
+                missionDetails = `
+                    <h3>Mission Objective</h3>
+                    <p>Map the complete social media presence of the target organization and its key personnel. Identify connections, relationships, and potential vulnerabilities through social engineering.</p>
+                    
+                    <h3>Requirements</h3>
+                    <ul>
+                        <li>Identify at least 10 key personnel</li>
+                        <li>Map their connections to each other</li>
+                        <li>Find at least 3 potential entry points</li>
+                        <li>Document all findings in the logbook</li>
+                    </ul>
+                    
+                    <h3>Progress</h3>
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Completion</span>
+                            <span>45%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                    </div>
+                    
+                    <h3>Notes</h3>
+                    <p>- Found LinkedIn profiles for 5 executives<br>
+                    - Identified Twitter accounts for 3 key personnel<br>
+                    - Discovered personal Facebook account for CTO<br>
+                    - Need to investigate Instagram and TikTok presence</p>
+                    
+                    <h3>Reward</h3>
+                    <p>150 🪙 + Spyglass upgrade</p>
+                `;
+            } else if (missionName === 'Domain Plunder') {
+                missionDetails = `
+                    <h3>Mission Objective</h3>
+                    <p>Analyze all subdomains, associated infrastructure, and digital footprint of the target. Identify potential vulnerabilities, outdated systems, and entry points.</p>
+                    
+                    <h3>Requirements</h3>
+                    <ul>
+                        <li>Enumerate all subdomains (at least 15)</li>
+                        <li>Identify server technologies and versions</li>
+                        <li>Check for common vulnerabilities</li>
+                        <li>Map network infrastructure</li>
+                    </ul>
+                    
+                    <h3>Progress</h3>
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Completion</span>
+                            <span>62%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 62%"></div>
+                        </div>
+                    </div>
+                    
+                    <h3>Notes</h3>
+                    <p>- Found 12 subdomains so far<br>
+                    - Main site running on outdated Apache<br>
+                    - Dev subdomain has directory listing enabled<br>
+                    - Potential SQL injection point on login page</p>
+                    
+                    <h3>Reward</h3>
+                    <p>200 🪙 + Network Scanner upgrade</p>
+                `;
+            } else if (missionName === "Dead Man's Cache") {
+                missionDetails = `
+                    <h3>Mission Objective</h3>
+                    <p>Recover data from archived websites, cached pages, and historical records. Find information that the target organization thought was long buried.</p>
+                    
+                    <h3>Requirements</h3>
+                    <ul>
+                        <li>Search at least 5 years of archived content</li>
+                        <li>Recover at least 3 pieces of sensitive information</li>
+                        <li>Find evidence of past security incidents</li>
+                        <li>Identify former employees with potential grudges</li>
+                    </ul>
+                    
+                    <h3>Progress</h3>
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Completion</span>
+                            <span>30%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    
+                    <h3>Notes</h3>
+                    <p>- Found Wayback Machine snapshots from 2019-2023<br>
+                    - Discovered old API documentation with example credentials<br>
+                    - Identified a data breach announcement from 2021 (quickly removed)<br>
+                    - Need to check Google cache and other archive sources</p>
+                    
+                    <h3>Reward</h3>
+                    <p>300 🪙 + Legendary "Ghost Ship" achievement</p>
+                `;
+            }
+            
+            modalContent.innerHTML = missionDetails;
+            
+            // Animate the progress bars in the modal
+            setTimeout(function() {
+                const modalProgressBars = modalContent.querySelectorAll('.progress-fill');
+                modalProgressBars.forEach(bar => {
+                    const width = bar.style.width;
+                    bar.style.width = 0;
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 100);
+                });
+            }, 100);
+        }
+
+        function closeMissionModal() {
+            const modal = document.getElementById('mission-modal');
+            modal.style.display = 'none';
+        }
+
+        // Close modal if clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('mission-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Show toast message
+        function showToast(message) {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.style.position = 'fixed';
+            }
+        }
+</script>
