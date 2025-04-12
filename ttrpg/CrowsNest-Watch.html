@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Crow's Nest: Watch for Troubled Waters</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: url('parchment-texture.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #4b2e15;
+            text-align: center;
+            padding: 20px;
+        }
+        .feed-box {
+            background: rgba(255, 255, 255, 0.9);
+            border: 5px solid #8b4513;
+            padding: 15px;
+            max-width: 800px;
+            margin: 20px auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            border-radius: 10px;
+        }
+        .button {
+            background: #d4af37;
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .button:hover {
+            background: #b8860b;
+        }
+        .sticky-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        .sticky-bar a {
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .sticky-bar a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>The Crow's Nest: Watch for Troubled Waters</h1>
+    <p>Keep a keen eye on the horizon, Captain! Stay informed with the latest dispatches from the world's defenders of freedom.</p>
+    
+    <div class="feed-box">
+        <h2>Ship's Log</h2>
+        <div id="rss-feeds">Loading latest updates...</div>
+        <button class="button" onclick="fetchFeeds()">Spyglass: Refresh the Horizon</button>
+    </div>
+    
+    <div class="sticky-bar">
+        <a href="#" onclick="openSignupPopup()">⚓ Join the Crew</a>
+        <a href="#">🗡️ Mission Briefing</a>
+        <a href="#">📜 Rules of Engagement</a>
+        <a href="https://github.com/your-project-repo" target="_blank">🏴‍☠️ Port of Pull Requests</a>
+    </div>
+    
+    <script>
+        async function fetchFeeds() {
+            try {
+                document.getElementById('rss-feeds').innerHTML = "Fetching fresh winds...";
+                // Replace with your actual RSS feed URL or API endpoint
+                let response = await fetch('https://api.rss2json.com/v1/api.json?rss_url=http://rss.cnn.com/rss/edition.rss');
+                
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.status}`);
+                }
+                
+                let data = await response.json();
+                let feedHtml = '';
+                
+                // Parse and display the feeds (adjust based on your actual RSS feed structure)
+                if (data && data.items) {
+                    feedHtml = '<ul style="text-align: left;">';
+                    data.items.slice(0, 5).forEach(item => {
+                        feedHtml += `<li><a href="${item.link}" target="_blank">${item.title}</a>`;
+                        feedHtml += `<p>${item.description.substring(0, 150)}...</p></li>`;
+                    });
+                    feedHtml += '</ul>';
+                } else {
+                    feedHtml = 'No updates available at the moment.';
+                }
+                
+                document.getElementById('rss-feeds').innerHTML = feedHtml;
+            } catch (error) {
+                console.error('Error fetching feeds:', error);
+                document.getElementById('rss-feeds').innerHTML = 
+                    "Arrr! The seas be troubled. Could not fetch the latest dispatches. Try again later, Captain.";
+            }
+        }
+        
+        // Load feeds when the page loads
+        document.addEventListener('DOMContentLoaded', fetchFeeds);
+        
+        function openSignupPopup() {
+            alert("Join the Crew sign-up coming soon!");
+        }
+    </script>
+</body>
+</html>
