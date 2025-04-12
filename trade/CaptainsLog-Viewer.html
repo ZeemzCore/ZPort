@@ -1,0 +1,886 @@
+I updated somethings with claude. can you see where we stopped and finish?
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏴‍☠️ Captain's Log Viewer</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: #f5deb3;
+            text-align: center;
+            padding: 20px;
+            color: #3a2a1d;
+        }
+
+        .log-container {
+            background: #fff8dc;
+            border: 2px solid #8b4513;
+            border-radius: 8px;
+            padding: 15px;
+            max-width: 800px;
+            margin: 20px auto;
+            height: 400px;
+            overflow-y: auto;
+            text-align: left;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .log-entry {
+            border-bottom: 1px solid #d2b48c;
+            padding: 8px 5px;
+            margin-bottom: 5px;
+        }
+
+        .user {
+            background-color: #e6d5b8;
+            border-radius: 5px;
+        }
+
+        .assistant {
+            background-color: #f8f1e0;
+            border-radius: 5px;
+        }
+
+        .button {
+            background: #8b4513;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background: #a0522d;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .file-input-wrapper input[type=file] {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-wrapper .button {
+            display: inline-block;
+        }
+
+        .status {
+            color: #8b4513;
+            font-style: italic;
+            margin: 10px 0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .export-container {
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .dropdown {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #8b4513;
+            background-color: #fff8dc;
+            color: #3a2a1d;
+            cursor: pointer;
+        }
+
+        .format-info {
+            background-color: #fff8dc;
+            border: 1px solid #8b4513;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px auto;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        .code-block {
+            background-color: #f0e6d2;
+            border-radius: 3px;
+            padding: 2px 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>🏴‍☠️ Captain's Log Viewer</h1>
+    </div>
+
+    <div class="file-input-wrapper">
+        <div class="button">📂 Upload Conversation</div>
+        <input type="file" id="fileInput" accept=".dat,.json,.txt,.html,.csv,.md">
+    </div>
+
+    <div id="statusMessage" class="status">Ready to decode yer treasure maps, Cap'n!</div>
+
+    <div class="format-info">
+        <p><strong>Supported Import Formats:</strong></p>
+        <ul>
+            <li><span class="code-block">.dat</span> - ChatGPT binary exports (WAVE format)</li>
+            <li><span class="code-block">.json</span> - JSON structured conversations</li>
+            <li><span class="code-block">.txt</span> - Plain text conversations</li>
+            <li><span class="code-block">.html</span> - HTML formatted conversations</li>
+            <li><span class="code-block">.csv</span> - CSV structured conversations</li>
+            <li><span class="code-block">.md</span> - Markdown formatted conversations</li>
+        </ul>
+    </div>
+
+    <div class="log-container" id="logContainer">
+        <p>Upload a conversation export file to view your chat history.</p>
+        <p>This viewer supports various formats, including binary .dat files with WAVE headers.</p>
+    </div>
+
+    <div class="export-container">
+        <select id="exportFormat" class="dropdown">
+            <option value="txt">Plain Text (.txt)</option>
+            <option value="json">JSON (.json)</option>
+            <option value="html">HTML (.html)</option>
+            <option value="md">Markdown (.md)</option>
+            <option value="csv">CSV (.csv)</option>
+        </select>
+        <button class="button" onclick="exportConversation()">📜 Export Conversation</button>
+    </div>
+
+    <script>
+        // Store parsed conversation data for exports
+
+        let conversationData = [];
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const statusMsg = document.getElementById('statusMessage');
+            statusMsg.textContent = "Decoding the mysterious scroll...";
+
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            // Choose the appropriate reader based on file extension
+            if (fileExtension === 'csv') {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    processCsvContent(e.target.result);
+                };
+
+                reader.readAsText(file);
+            } else if (fileExtension === 'html') {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    processHtmlContent(e.target.result);
+                };
+
+                reader.readAsText(file);
+            } else if (fileExtension === 'md') {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    processMarkdownContent(e.target.result);
+                };
+
+                reader.readAsText(file);
+            } else {
+                // Original handling for dat, json, txt
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const content = e.target.result;                    
+                    // Check for WAVE format header
+                    if (content.includes("WAVE fmt")) {
+                        statusMsg.textContent = "Arr! WAVE audio format detected. Attempting extraction...";
+                        processWaveFormat(content);
+                    } else {
+                        try {
+                            // Try parsing as JSON
+                            const data = JSON.parse(content);
+                            statusMsg.textContent = "JSON treasure map decoded successfully!";
+                            processJsonData(data);
+                        } catch (error) {
+                            // If JSON parsing fails, try text-based extraction
+                            statusMsg.textContent = "Not JSON format. Attempting text-based extraction...";
+                            processTextContent(content);
+                        }
+                    }
+                };
+
+                reader.readAsText(file);
+
+            }
+        });
+
+        
+
+        function processCsvContent(content) {
+            const statusMsg = document.getElementById('statusMessage');
+            statusMsg.textContent = "Decoding CSV chart...";
+
+            const logContainer = document.getElementById('logContainer');
+            // Basic CSV parsing
+
+            const lines = content.split(/\r?\n/).filter(line => line.trim());
+
+            if (lines.length === 0) {
+                logContainer.innerHTML = "<p>Empty CSV file or no valid data found.</p>";
+                return;
+
+            }
+
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+            // Look for role/content columns or similar
+
+            const roleIndex = headers.findIndex(h => h === 'role' || h === 'speaker' || h === 'author');
+
+            const contentIndex = headers.findIndex(h => h === 'content' || h === 'message' || h === 'text');
+            if (roleIndex === -1 || contentIndex === -1) {
+                statusMsg.textContent = "CSV format not recognized. Couldn't find role and content columns.";
+                logContainer.innerHTML = "<p>Could not identify role and content columns in the CSV.</p>";
+                return;
+            }
+
+            // Parse and display messages
+            conversationData = [];
+            let htmlContent = "";
+
+            for (let i = 1; i < lines.length; i++) {
+                const cells = parseCSVLine(lines[i]);
+                if (cells.length <= Math.max(roleIndex, contentIndex)) continue;
+
+                const role = cells[roleIndex].trim().toLowerCase();
+                const content = cells[contentIndex].trim();
+              
+                // Add to conversation data for export
+                conversationData.push({
+                    role: role,
+                    content: content
+                });
+              
+                // Add to HTML display
+
+                const displayRole = role === 'user' || role === 'human' ? 'User' : 
+                                   role === 'assistant' || role === 'ai' || role === 'chatgpt' ? 'Assistant' : 
+                                   role.charAt(0).toUpperCase() + role.slice(1);
+                                   
+                htmlContent += `<div class='log-entry ${role}'><strong>${displayRole}:</strong> ${content}</div>`;
+            }
+
+            logContainer.innerHTML = htmlContent || "<p>No valid messages found in this CSV.</p>";
+            statusMsg.textContent = "CSV chart decoded successfully!";
+        }
+
+        
+
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+
+            result.push(current); // Add the last field
+            return result;
+        }
+
+        
+
+        function processHtmlContent(content) {
+            const statusMsg = document.getElementById('statusMessage');
+            statusMsg.textContent = "Decoding HTML scroll...";
+          
+            const logContainer = document.getElementById('logContainer');
+
+            // Create a temporary element to parse the HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = content;
+          
+            // Look for common message patterns in HTML
+            const messageDivs = tempDiv.querySelectorAll('.message, .chat-message, .log-entry');
+            if (messageDivs.length > 0) {
+                // HTML has structured message elements
+                conversationData = [];
+                let htmlContent = "";
+
+                messageDivs.forEach(div => {
+                    let role = '';
+                    let messageContent = '';
+
+                    // Try to find the role
+                    if (div.classList.contains('user') || div.classList.contains('human')) {
+                        role = 'user';
+                    } else if (div.classList.contains('assistant') || div.classList.contains('chatgpt') || div.classList.contains('ai')) {
+                        role = 'assistant';
+                    } else {
+                        // Try to extract from content
+                        const text = div.textContent.trim();
+                        if (text.startsWith('User:') || text.startsWith('Human:')) {
+                            role = 'user';
+                            messageContent = text.substring(text.indexOf(':') + 1).trim();
+                        } else if (text.startsWith('Assistant:') || text.startsWith('ChatGPT:') || text.startsWith('AI:')) {
+                            role = 'assistant';
+                            messageContent = text.substring(text.indexOf(':') + 1).trim();
+                        }
+                    }
+                    
+                    // If role wasn't determined from the class, try other methods
+                    if (!role) {
+                        const roleElem = div.querySelector('.role, .speaker, .author');
+                        if (roleElem) {
+                            const roleText = roleElem.textContent.trim().toLowerCase();
+                            role = roleText.includes('user') || roleText.includes('human') ? 'user' : 
+                                 roleText.includes('assistant') || roleText.includes('chatgpt') || roleText.includes('ai') ? 'assistant' : 
+                                 roleText;
+                        }
+                    }
+
+                    // Get the content if we haven't already
+                    if (!messageContent) {
+                        const contentElem = div.querySelector('.content, .message-content, .text');
+                        if (contentElem) {
+                            messageContent = contentElem.textContent.trim();
+                        } else {
+                            // Try to use the whole div if no specific content element
+                            messageContent = div.textContent.trim();
+                            // If role is in the text, remove it
+                            if (role && messageContent.toLowerCase().includes(role.toLowerCase() + ':')) {
+                                messageContent = messageContent.substring(messageContent.toLowerCase().indexOf(role.toLowerCase() + ':') + role.length + 1).trim();
+                            }
+                        }
+                    }
+
+                    if (role && messageContent) {
+                        // Add to conversation data for export
+                        conversationData.push({
+                            role: role,
+                            content: messageContent
+                        });
+                        // Add to HTML display
+                        const displayRole = role === 'user' || role === 'human' ? 'User' : 
+                                         role === 'assistant' || role === 'ai' || role === 'chatgpt' ? 'Assistant' : 
+                                         role.charAt(0).toUpperCase() + role.slice(1);
+                                         
+                        htmlContent += `<div class='log-entry ${role}'><strong>${displayRole}:</strong> ${messageContent}</div>`;
+                    }
+                });
+                
+                logContainer.innerHTML = htmlContent || "<p>No valid messages found in this HTML.</p>";
+            } else {
+                // Try to extract based on text patterns
+                statusMsg.textContent = "HTML structure not recognized. Trying to extract text...";
+               
+                // Get text content and process it as plain text
+                const textContent = tempDiv.textContent;
+                processTextContent(textContent);
+                return;
+            }
+            
+            statusMsg.textContent = "HTML scroll decoded successfully!";
+        }
+        
+        function processMarkdownContent(content) {
+            const statusMsg = document.getElementById('statusMessage');
+            statusMsg.textContent = "Decoding Markdown map...";
+            
+            const logContainer = document.getElementById('logContainer');
+           
+            // Look for markdown patterns
+            const userPatterns = [/^#+\s*user:/i, /^#+\s*human:/i, /^\*\*user:\*\*/i, /^\*\*human:\*\*/i, /^user:/i, /^human:/i];
+            const assistantPatterns = [/^#+\s*assistant:/i, /^#+\s*chatgpt:/i, /^#+\s*ai:/i, /^\*\*assistant:\*\*/i, /^\*\*chatgpt:\*\*/i, /^\*\*ai:\*\*/i, /^assistant:/i, /^chatgpt:/i, /^ai:/i];
+
+            const lines = content.split(/\r?\n/);
+         
+            conversationData = [];
+            let htmlContent = "";
+            let currentRole = "";
+            let currentMessage = "";
+            
+            lines.forEach(line => {
+                // Check if line indicates a role switch
+                const isUserLine = userPatterns.some(pattern => pattern.test(line.trim()));
+                const isAssistantLine = assistantPatterns.some(pattern => pattern.test(line.trim()));
+              
+                if (isUserLine) {
+                    // Save previous message if exists
+
+                    if (currentMessage && currentRole) {
+                        // Add to conversation data for export
+                        conversationData.push({
+                            role: currentRole.toLowerCase(),
+                            content: currentMessage
+                        });
+
+                        htmlContent += `<div class='log-entry ${currentRole.toLowerCase()}'><strong>${currentRole}:</strong> ${currentMessage}</div>`;
+                    }
+
+                    currentRole = "User";
+
+                    // Remove the role prefix and formatting
+                    currentMessage = line.replace(/^#+\s*user:/i, "")
+                                      .replace(/^#+\s*human:/i, "")
+                                      .replace(/^\*\*user:\*\*/i, "")
+                                      .replace(/^\*\*human:\*\*/i, "")
+                                      .replace(/^user:/i, "")
+                                      .replace(/^human:/i, "")
+                                      .trim();
+                } 
+                else if (isAssistantLine) {
+                    // Save previous message if exists
+                    if (currentMessage && currentRole) {
+                        // Add to conversation data for export
+                        conversationData.push({
+                            role: currentRole.toLowerCase(),
+                            content: currentMessage
+                        });
+                      
+                        htmlContent += `<div class='log-entry ${currentRole.toLowerCase()}'><strong>${currentRole}:</strong> ${currentMessage}</div>`;
+                    }
+
+                    
+                    currentRole = "Assistant";
+                    // Remove the role prefix and formatting
+                    currentMessage = line.replace(/^#+\s*assistant:/i, "")
+                                      .replace(/^#+\s*chatgpt:/i, "")
+                                      .replace(/^#+\s*ai:/i, "")
+                                      .replace(/^\*\*assistant:\*\*/i, "")
+                                      .replace(/^\*\*chatgpt:\*\*/i, "")
+                                      .replace(/^\*\*ai:\*\*/i, "")
+                                      .replace(/^assistant:/i, "")
+                                      .replace(/^chatgpt:/i, "")
+                                      .replace(/^ai:/i, "")
+                                      .trim();
+                }
+                else if (currentRole) {
+                    // Append to current message
+                    currentMessage += "\n" + line;
+                }
+            });
+           
+            // Add the last message
+            if (currentMessage && currentRole) {
+                // Add to conversation data for export
+                conversationData.push({
+                    role: currentRole.toLowerCase(),
+                    content: currentMessage
+                });
+                
+                htmlContent += `<div class='log-entry ${currentRole.toLowerCase()}'><strong>${currentRole}:</strong> ${currentMessage}</div>`;
+            }
+
+            if (htmlContent) {
+                logContainer.innerHTML = htmlContent;
+                statusMsg.textContent = "Markdown map decoded successfully!";
+            } else {
+                // If pattern recognition failed, try general text extraction
+                statusMsg.textContent = "Markdown structure not recognized. Trying text extraction...";
+                processTextContent(content);
+            }
+        }
+
+        function processWaveFormat(content) {
+            // Basic strategy for WAVE format: look for text patterns that might be chat messages
+            const logContainer = document.getElementById('logContainer');
+            logContainer.innerHTML = "<p>Attempting to extract text from WAVE format file...</p>";
+            
+            // Look for patterns that might indicate user/assistant exchanges
+            const userPattern = /user|human|you:/gi;
+            const assistantPattern = /assistant|ai|chatgpt|gpt|system:/gi;
+            
+            // Extract text chunks that might be messages
+            const lines = content.split(/\n|\r\n|\r/).filter(line => 
+                line.trim().length > 10 && 
+                !line.includes("WAVE") && 
+                !line.includes("fmt ")
+            );
+            
+            if (lines.length > 0) {
+                conversationData = [];
+                let htmlContent = "";
+                let currentRole = "";
+                let currentMessage = "";
+
+                lines.forEach(line => {
+                    // Check if line might be a role indicator
+                    if (line.match(userPattern)) {
+                        // Save previous message if exists
+                        if (currentMessage && currentRole) {
+                            // Add to conversation data for export
+                            conversationData.push({
+                                role: currentRole.toLowerCase(),
+                                content: currentMessage
+                            });
+
+                            htmlContent += `<div class='log-entry ${currentRole.toLowerCase()}'><strong>${currentRole}:</strong> ${currentMessage}</div>`;
+                        }
+
+                        currentRole = "User";
+                        currentMessage = line.replace(userPattern, "").trim();
+                    } 
+
+                    else if (line.match(assistantPattern)) {
+                        // Save previous message if exists
+                        if (currentMessage && currentRole) {
+                            // Add to conversation data for export
+                            conversationData.push({
+                                role: currentRole.toLowerCase(),
+                                content: currentMessage
+                            });
+                          
+                            htmlContent += `<div class='log-entry ${currentRole.toLowerCase()}'><strong>${currentRole}:</strong> ${currentMessage}</div>`;
+                        }
+
+                        currentRole = "Assistant";
+                        currentMessage = line.replace(assistantPattern, "").trim();
+                    }
+
+                    else if (currentRole) {
+                        // Append to current message
+                        currentMessage += " " + line.trim();
+                    }
+                });
+
+                // Add the last message
+                if (currentMessage && currentRole) {
+                    // Add to conversation data for export
+                    conversationData.push({
+                        role: currentRole.toLowerCase(),
+                        content: currentMessage
+                    });
+                    
+                    htmlContent += `<div class='log-entry ${currentRole.toLowerCase()}'><strong>${currentRole}:</strong> ${currentMessage}</div>`;
+                }
+              
+                logContainer.innerHTML = htmlContent || "<p>Could not extract readable chat messages from this file format.</p>";
+            } else {
+                logContainer.innerHTML = "<p>Could not extract readable text from this file format.</p>";
+            }
+        }
+
+        function processJsonData(data) {
+            const logContainer = document.getElementById('logContainer');
+            
+            // Look for different possible message structures
+            let messages = [];
+          
+            if (Array.isArray(data)) {
+                // The whole file might be an array of messages
+                messages = data;
+            } else {
+                // Try common structures
+                messages = data.messages || data.chats || data.conversations || 
+                          (data.mapping && Object.values(data.mapping)) || [];
+            }
+           
+            if (messages.length > 0) {
+                // Try to identify the structure of the messages
+
+                const sampleMsg = messages[0];
+               
+                if (sampleMsg.content !== undefined) {
+                    // Simple structure with content property
+                    const roleKey = sampleMsg.role !== undefined ? 'role' : 
+                                   sampleMsg.author !== undefined ? 'author' : 'speaker';
+                    conversationData = messages.map(m => {
+                        return {
+                            role: m[roleKey] || 'unknown',
+                            content: typeof m.content === 'string' ? m.content : JSON.stringify(m.content),
+                            timestamp: m.timestamp || m.created_at || ''
+                        };
+                    });
+
+                    logContainer.innerHTML = messages.map(m => {
+                        const role = m[roleKey] || 'unknown';
+                        const content = typeof m.content === 'string' ? m.content : 
+                                      JSON.stringify(m.content);
+                        const timestamp = m.timestamp || m.created_at || '';
+                        return `<div class='log-entry ${role}'><strong>${role.toUpperCase()}${timestamp ? ' ['+timestamp+']' : ''}:</strong> ${content}</div>`;
+                    }).join('');
+                } 
+                else if (sampleMsg.message !== undefined) {
+                    // Nested message structure
+                    conversationData = messages.map(m => {
+                        const msg = m.message || {};
+                        return {
+                            role: msg.role || msg.author || 'unknown',
+                            content: typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content),
+                            timestamp: msg.timestamp || msg.created_at || ''
+                        };
+                    });
+                    
+                    logContainer.innerHTML = messages.map(m => {
+                        const msg = m.message || {};
+                        const role = msg.role || msg.author || 'unknown';
+                        const content = typeof msg.content === 'string' ? msg.content : 
+                                      JSON.stringify(msg.content);
+                        return `<div class='log-entry ${role}'><strong>${role.toUpperCase()}:</strong> ${content}</div>`;
+
+                    }).join('');
+                } 
+                else {
+                    // Try to interpret the structure
+                    logContainer.innerHTML = "<p>Found potential messages but couldn't determine their structure.</p>";
+                    logContainer.innerHTML += "<pre>" + JSON.stringify(messages[0], null, 2) + "</pre>";
+                }
+            } else {
+                // Last resort: just show the raw JSON structure for the user to inspect
+                logContainer.innerHTML = "<p>Could not identify message structure. Raw data:</p>";
+                logContainer.innerHTML += "<pre>" + JSON.stringify(data, null, 2).substring(0, 1000) + "...</pre>";
+            }
+        }
+       
+        function processTextContent(content) {
+            const logContainer = document.getElementById('logContainer');
+           
+            // Look for common patterns in conversational text
+            const lines = content.split(/\n|\r\n|\r/).filter(line => line.trim().length > 0);
+           
+            if (lines.length > 0) {
+                // Try to identify if there's a pattern indicating roles
+                const userPatterns = [/^user:/i, /^human:/i, /^you:/i, /^me:/i];
+                const assistantPatterns = [/^assistant:/i, /^ai:/i, /^chatgpt:/i, /^gpt:/i, /^system:/i];
+               
+                conversationData = [];
+                let htmlContent = "";
+                let currentRole = "";
+                let currentMessage = "";
+                
+                lines.forEach(line => {
+                    // Check if line indicates a user message
+                    const isUserLine = userPatterns.some(pattern => pattern.test(line.trim()));
+                    const isAssistantLine = assistantPatterns.some(pattern => pattern.test(line.trim()));
+                    
+                    if (isUserLine) {
+                        // Save previous message if exists
+                        if (currentMessage && currentRole) {
+                            // Add to conversation data for export
+                            conversationData.push({
+                                role: currentRole.toLowerCase(),
+
+                                content: currentMessage
+
+                            });
+                         
+                            htmlContent += `<div class='log-entry ${currentRole.toLowerCase()}'><strong>${currentRole}:</strong> ${currentMessage}</div>`;
+                        }
+
+                        currentRole = "User";
+                        currentMessage = line.replace(/^user:|^human:|^you:|^me:/i, "").trim();
+                    } 
+
+                    else if (isAssistantLine) {
+                        // Save previous message if exists
+                        if (currentMessage && currentRole) {
+                            // Add to conversation data for export
+                            conversationData.push({
+                                role: currentRole.toLowerCase(),
+                                content: currentMessage
+                            });
+                            
+                            htmlContent += `<div class='log-entry ${currentRole.toLowerCase()}'><strong>${currentRole}:</strong> ${currentMessage}</div>`;
+                        }
+
+                        currentRole = "Assistant";
+                        currentMessage = line.replace(/^assistant:|^ai:|^chatgpt:|^gpt:|^system:/i, "").trim();
+                    }
+
+                    else if (currentRole) {
+                        // Append to current message
+                        currentMessage += " " + line.trim();
+                    }
+
+                    else {
+                        // If we haven't identified a role yet, try to guess
+                        if (line.length > 10) {
+                            currentRole = "Unknown";
+                            currentMessage = line.trim();
+                        }
+                    }
+                });
+
+               
+                // Add the last message
+                if (currentMessage && currentRole) {
+                    // Add to conversation data for export
+                    conversationData.push({
+                        role: currentRole.toLowerCase(),
+                        content: currentMessage
+                    });
+                    
+                    htmlContent += `<div class='log-entry ${currentRole.toLowerCase()}'><strong>${currentRole}:</strong> ${currentMessage}</div>`;
+                }
+                
+                if (htmlContent) {
+                    logContainer.innerHTML = htmlContent;
+                } else {
+                    // If pattern recognition failed, just show the text content
+                    logContainer.innerHTML = "<p>Could not identify conversation structure. Raw content:</p>";
+                    logContainer.innerHTML += "<pre>" + content.substring(0, 1000) + "...</pre>";
+                }
+            } else {
+                logContainer.innerHTML = "<p>No readable text content found in this file.</p>";
+            }
+        }
+       
+        function exportConversation() {
+            const format = document.getElementById('exportFormat').value;
+            const filename = `chat_log_${new Date().toISOString().slice(0,10)}.${format}`;
+            const statusMsg = document.getElementById('statusMessage');
+           
+            // Handle case where no data has been loaded
+            if (conversationData.length === 0) {
+                const logContainer = document.getElementById('logContainer');
+               
+                // If the container has content but no structured data, try to extract from UI
+                if (logContainer.innerHTML && logContainer.innerHTML !== "<p>Upload a conversation export file to view your chat history.</p><p>This viewer supports various formats, including binary .dat files with WAVE headers.</p>") {
+                    const entries = logContainer.querySelectorAll('.log-entry');
+         
+                    if (entries.length > 0) {
+                        // Extract data from UI
+                        entries.forEach(entry => {
+                            const text = entry.textContent.trim();
+                            let role, content;                           
+                            if (text.startsWith('USER:') || text.startsWith('HUMAN:')) {
+                                role = 'user';
+                                content = text.substring(text.indexOf(':') + 1).trim();
+                            } else if (text.startsWith('ASSISTANT:') || text.startsWith('AI:') || text.startsWith('CHATGPT:')) {
+                                role = 'assistant';
+                                content = text.substring(text.indexOf(':') + 1).trim();
+                            } else if (entry.classList.contains('user')) {
+                                role = 'user';
+                                content = text;
+                            } else if (entry.classList.contains('assistant')) {
+                                role = 'assistant';
+                                content = text;
+                            } else {
+                                role = 'unknown';
+                                content = text;
+                            }
+                            conversationData.push({ role, content });
+                        });
+                    } else {
+                        statusMsg.textContent = "No structured data available for export.";
+                        return;
+                    }
+                } else {
+                    statusMsg.textContent
+					
+					statusMsg.textContent = "No conversation data to export. Please load a file first.";
+                    return;
+                }
+            }
+            
+            let exportContent = '';
+            
+            switch (format) {
+                case 'txt':
+                    exportContent = conversationData.map(msg => 
+                        `${msg.role.toUpperCase()}: ${msg.content}`
+                    ).join('\n\n');
+                    break;
+                    
+                case 'json':
+                    exportContent = JSON.stringify({
+                        messages: conversationData,
+                        exported_at: new Date().toISOString()
+                    }, null, 2);
+                    break;
+                    
+                case 'html':
+                    exportContent = `
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Conversation Export</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+                            .message { padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+                            .user { background-color: #e6f7ff; }
+                            .assistant { background-color: #f5f5f5; }
+                            .header { text-align: center; margin-bottom: 20px; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="header">
+                            <h1>Conversation Export</h1>
+                            <p>Exported on ${new Date().toLocaleString()}</p>
+                        </div>
+                        ${conversationData.map(msg => `
+                            <div class="message ${msg.role}">
+                                <strong>${msg.role.toUpperCase()}:</strong>
+                                <div>${msg.content.replace(/\n/g, '<br>')}</div>
+                            </div>
+                        `).join('')}
+                    </body>
+                    </html>
+                    `;
+                    break;
+                    
+                case 'md':
+                    exportContent = `# Conversation Export\n\nExported on ${new Date().toLocaleString()}\n\n` +
+                        conversationData.map(msg => 
+                            `## ${msg.role.toUpperCase()}\n\n${msg.content}\n`
+                        ).join('\n');
+                    break;
+                    
+                case 'csv':
+                    exportContent = 'role,content\n' + 
+                        conversationData.map(msg => 
+                            `"${msg.role}","${msg.content.replace(/"/g, '""')}"`
+                        ).join('\n');
+                    break;
+            }
+            
+            const blob = new Blob([exportContent], { 
+                type: format === 'html' ? 'text/html' : 
+                      format === 'json' ? 'application/json' : 
+                      format === 'csv' ? 'text/csv' : 'text/plain' 
+            });
+            
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+            
+            statusMsg.textContent = `Conversation exported as ${format.toUpperCase()} successfully!`;
+        }
+    </script>
+</body>
+</html>
