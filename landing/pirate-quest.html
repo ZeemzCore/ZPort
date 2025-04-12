@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pirate Game Quests</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="quest-container">
+        <h1>Quest Log</h1>
+        <div id="quests">
+            <div class="quest" id="quest1">
+                <h2>Title: The Crown of Dread</h2>
+                <p>Description: Recover the Crown of Dread from the Cursed Isle.</p>
+                <ul>
+                    <li>Objective: Navigate through the Cursed Isle</li>
+                    <li>Objective: Defeat the Ghostly Guardian</li>
+                </ul>
+                <p>Reward: <strong>500 Gold</strong> and <strong>Cursed Artifact</strong></p>
+                <p>Status: <span class="status" id="status1">Not Started</span></p>
+                <button onclick="startQuest('quest1')">Start Quest</button>
+            </div>
+            <!-- More quests can be added similarly -->
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
