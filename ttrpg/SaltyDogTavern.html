@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Salty Dog Tavern - Tales From the Seven Seas</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #0d1b2a;
+            color: #e0c9a6;
+            background-image: url('/api/placeholder/400/320');
+            background-repeat: repeat;
+            background-blend-mode: overlay;
+        }
+        
+        /* Navigation */
+        .navbar {
+            background-color: #1b263b;
+            padding: 1rem;
+            border-bottom: 3px solid #c9a66b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar h1 {
+            color: #e0c9a6;
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px #000;
+        }
+        
+        .navbar ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        .navbar li {
+            margin-left: 2rem;
+        }
+        
+        .navbar a {
+            color: #c9a66b;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+        
+        .navbar a:hover {
+            color: #e0c9a6;
+            text-decoration: underline;
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Tavern Section */
+        .tavern {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            background-color: rgba(27, 38, 59, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            margin-bottom: 2rem;
+        }
+        
+        .tavern-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .tavern-header h2 {
+            font-size: 2.5rem;
+            color: #c9a66b;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px #000;
+        }
+        
+        .tavern-header p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        
+        /* Story Scroll Section */
+        .scroll-container {
+            width: 100%;
+            background-color: #f0e6d2;
+            color: #3d2813;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            max-height: 500px;
+            overflow-y: auto;
+            background-image: url('/api/placeholder/400/320');
+            background-blend-mode: overlay;
+            border: 10px solid #8b5a2b;
+            border-image: url('/api/placeholder/400/320') 30 stretch;
+        }
+        
+        .scroll-container::before,
+        .scroll-container::after {
+            content: "";
+            position: absolute;
+            height: 50px;
+            width: 50px;
+            background-color: #8b5a2b;
+            border-radius: 50%;
+        }
+        
+        .scroll-container::before {
+            top: -25px;
+            left: -25px;
+        }
+        
+        .scroll-container::after {
+            top: -25px;
+            right: -25px;
+        }
+        
+        .story {
+            font-family: 'Georgia', serif;
+            line-height: 1.8;
+            padding: 1rem;
+        }
+        
+        .story h3 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #8b5a2b;
+        }
+        
+        .story p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            text-indent: 2rem;
+        }
+        
+        /* Grog Section */
+        .grog-section {
+            display: flex;
+            justify-content: space-between;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .grog-menu {
+            flex: 1;
+            background-color: rgba(27, 38, 59, 0.9);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .grog-menu h3 {
+            color: #c9a66b;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px #000;
+        }
+        
+        .grog-menu ul {
+            list-style: none;
+        }
+        
+        .grog-menu li {
+            padding: 0.8rem 0;
+            border-bottom: 1px dashed #c9a66b;
+            font-size: 1.1rem;
+        }
+        
+        .grog-menu li:last-child {
+            border-bottom: none;
+        }
+        
+        .grog-button {
+            display: block;
+            margin: 1.5rem auto 0;
+            padding: 0.8rem 1.5rem;
+            background-color: #c9a66b;
+            color: #1b263b;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .grog-button:hover {
+            background-color: #e0c9a6;
+            transform: scale(1.05);
+        }
+        
+        /* Interactive Elements */
+        .story-selector {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        
+        .story-button {
+            padding: 0.8rem 1.5rem;
+            margin: 0 1rem;
+            background-color: #c9a66b;
+            color: #1b263b;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .story-button:hover {
+            background-color: #e0c9a6;
+            transform: scale(1.05);
+        }
+        
+        .story-button.active {
+            background-color: #8b5a2b;
+            color: #e0c9a6;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: #1b263b;
+            border-top: 3px solid #c9a66b;
+            margin-top: 2rem;
+        }
+        
+        footer p {
+            color: #c9a66b;
+            font-size: 1rem;
+        }
+        
+        /* Pirate-themed Decorations */
+        .pirate-decorations {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .ship-wheel {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background-image: url('/api/placeholder/400/320');
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.2;
+        }
+        
+        #wheel1 {
+            top: 10%;
+            right: 5%;
+        }
+        
+        #wheel2 {
+            bottom: 10%;
+            left: 5%;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+            }
+            
+            .navbar ul {
+                margin-top: 1rem;
+            }
+            
+            .navbar li {
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
+            
+            .grog-section {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <h1>The Salty Dog Tavern</h1>
+        <ul>
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#">Tale Collection</a></li>
+            <li><a href="#">The Crew</a></li>
+            <li><a href="#">Chart a Course</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Tavern Introduction -->
+        <section class="tavern">
+            <div class="tavern-header">
+                <h2>Welcome, ye Scallywags!</h2>
+                <p>Rest yer sea legs and warm yer bones with tales from the seven seas. Here at The Salty Dog, we serve the finest grog this side of Tortuga and spin yarns that'd make Davy Jones himself sit up and listen!</p>
+            </div>
+            
+            <!-- Story Selector -->
+            <div class="story-selector">
+                <button class="story-button active" id="story1-btn">The Wisdom Tree</button>
+                <button class="story-button" id="story2-btn">The Kraken's Bride</button>
+                <button class="story-button" id="story3-btn">Dead Man's Chest</button>
+            </div>
+            
+            <!-- Story Scroll -->
+            <div class="scroll-container">
+                <article class="story" id="story1">
+                    <h3>The Wisdom Tree</h3>
+                    <p>The street looked ordinary enough – lined with maples just beginning to hint at the season's change. It was that perfect moment between seasons when the air held both memories and promises. Not quite fall, not quite spring, but suspended in that golden liminal space.</p>
+                    <p>I strolled along the sidewalk, enjoying the pleasant weather, when the peaceful afternoon erupted with whoops and hollers. A stretch limousine cruised past, windows down, with what appeared to be – I blinked to make sure I wasn't hallucinating – seventeen college mascot heads and nineteen very animated young men hanging out the windows.</p>
+                    <p>"Hey! Come join us up the hill!" one called out, waving frantically.</p>
+                    <p>Since I was already heading that direction, curiosity got the better of me. By the time I reached the crest of the hill, the limo was parked at a haphazard angle in front of an imposing plantation-style house. The seventeen mascot heads were arranged eerily along the porch, nestled between classic Greek columns like bizarre sentinels. The boisterous young men had vanished, leaving behind an unsettling silence.</p>
+                    <p>I might have kept walking if not for my increasingly urgent need for a bathroom. Hesitantly, I stepped inside the quiet house and found a bathroom just off the main hall. It was oddly designed with two doors. After checking both locks, I noticed a corkboard covered with business cards. Leaning closer, I realized they were all for local bars – specifically listing which nights offered free drinks for women.</p>
+                    <p>After washing my hands, curiosity drew me to the second door. Perhaps the missing party-goers were on the other side? I turned the handle and was instantly knocked backward as water surged through the doorway, flooding over me with shocking force.</p>
+                    <p>The current swept me into what should have been the living room, but was now a swirling pool. As I struggled to stay afloat, I passed a coffee table where two books remained perfectly dry despite the deluge. Nothing else in the room suggested a fraternity house – just an ordinary living space now submerged in impossible water.</p>
+                    <p>With effort, I made it to the front door and managed to slide it open, spilling onto the concrete porch in a gasping heap. As I caught my breath and tried to process what had happened, movement in a nearby tree caught my eye.</p>
+                    <p>There, among the branches, perched a creature unlike anything I'd ever seen – part sloth, part stegosaurus, with ancient, knowing eyes that seemed to hold hunger of a different sort. It extended one long arm ending in a taloned finger, beckoning me forward.</p>
+                    <p>Logic told me to run, but I felt no fear – only a profound sense of safety and comfort as I approached. The creature radiated understanding, as if any question I might ask would find its answer in those bottomless eyes. But what could I possibly offer in return for such wisdom?</p>
+                    <p>The beast seemed to sense my thoughts, projecting a feeling that I possessed something it desired – something that could form an exchange between us.</p>
+                    <p>Instinctively, I reached into my back pocket and found, inexplicably, a partial corn cob. With no idea where it had come from or how it had gotten there, I offered it up to the tree-dwelling behemoth.</p>
+                    <p>As the creature delicately plucked the corn from my palm and began to munch, its eyes enveloped me completely. The world narrowed to just us – the seeker and the knowing.</p>
+                    <p>"What do I need to know?" The question escaped my lips, simple yet boundless.</p>
+                    <p>Warmth began at my core and radiated outward until I was bathed in it. The creature's eyes grew wider, more luminous, and suddenly the tree behind it seemed to part like a theater curtain. There, suspended from a trapeze swing, appeared John Leguizamo dressed in Toulouse-Lautrec's ridiculous tutu costume from Moulin Rouge.</p>
+                    <p>He swung wildly back and forth, his face painted in exaggerated makeup, frantically gesturing with one arm while clutching the swing with the other. With all the theatrical desperation of a clown performing a leading lady's part, he threw his head back and screamed at the top of his lungs:</p>
+                    <p>"THE GREATEST THING YOU'LL EVER LEARN IS JUST TO LOVE AND BE LOVED IN RETURN!"</p>
+                    <p>The absurdity of this tiny man in a tutu, swinging through the branches of this ancient tree, bellowing profound wisdom while a sloth-stegosaurus creature munched contentedly on corn – it was all so ridiculous that I couldn't help but laugh. Yet somehow, the message sank deeper for its unlikely messenger.</p>
+                    <p>As Leguizamo continued to swing and shout, as if desperately hoping some invisible leading lady would hear his proclamation, I understood that this bizarre truth – delivered by the most unexpected herald – was exactly what I had climbed the hill to discover.</p>
+                </article>
+                
+                <article class="story" id="story2" style="display: none;">
+                    <h3>The Kraken's Bride</h3>
+                    <p>This tale be still in the captain's log, waitin' to be told. Check back after we've sailed the western seas!</p>
+                </article>
+                
+                <article class="story" id="story3" style="display: none;">
+                    <h3>Dead Man's Chest</h3>
+                    <p>This yarn be still in the captain's log, waitin' to be told. Check back after we've sailed the eastern seas!</p>
+                </article>
+            </div>
+        </section>
+        
+        <!-- Grog Section -->
+        <section class="grog-section">
+            <div class="grog-menu">
+                <h3>Grog Menu</h3>
+                <ul>
+                    <li>Captain's Reserve - A potent mix of rum, lime, and mysterious spices from the East Indies</li>
+                    <li>Kraken's Kiss - Black rum with a splash of ginger beer and a squeeze of blood orange</li>
+                    <li>Siren's Song - A sweet concoction of coconut rum, pineapple, and blue curaçao that'll have ye singin' all night</li>
+                    <li>Blackbeard's Brew - A dark and stormy mix of spiced rum, molasses, and cinnamon</li>
+                    <li>Mermaid's Tears - A refreshing blend of white rum, mint, lime, and a touch of sugar</li>
+                </ul>
+                <button class="grog-button" id="grog-btn">Order a Round!</button>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Pirate Decorations -->
+    <div class="pirate-decorations">
+        <div class="ship-wheel" id="wheel1"></div>
+        <div class="ship-wheel" id="wheel2"></div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p>The Salty Dog Tavern &copy; 2025 - Where every tale be true... or at least worth the tellin'!</p>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // Story Selection
+        const story1Btn = document.getElementById('story1-btn');
+        const story2Btn = document.getElementById('story2-btn');
+        const story3Btn = document.getElementById('story3-btn');
+        const story1 = document.getElementById('story1');
+        const story2 = document.getElementById('story2');
+        const story3 = document.getElementById('story3');
+        
+        story1Btn.addEventListener('click', function() {
+            story1.style.display = 'block';
+            story2.style.display = 'none';
+            story3.style.display = 'none';
+            story1Btn.classList.add('active');
+            story2Btn.classList.remove('active');
+            story3Btn.classList.remove('active');
+        });
+        
+        story2Btn.addEventListener('click', function() {
+            story1.style.display = 'none';
+            story2.style.display = 'block';
+            story3.style.display = 'none';
+            story1Btn.classList.remove('active');
+            story2Btn.classList.add('active');
+            story3Btn.classList.remove('active');
+        });
+        
+        story3Btn.addEventListener('click', function() {
+            story1.style.display = 'none';
+            story2.style.display = 'none';
+            story3.style.display = 'block';
+            story1Btn.classList.remove('active');
+            story2Btn.classList.remove('active');
+            story3Btn.classList.add('active');
+        });
+        
+        // Grog Button
+        const grogBtn = document.getElementById('grog-btn');
+        
+        grogBtn.addEventListener('click', function() {
+            const grogTypes = [
+                "Captain's Reserve",
+                "Kraken's Kiss",
+                "Siren's Song",
+                "Blackbeard's Brew",
+                "Mermaid's Tears"
+            ];
+            
+            const randomGrog = grogTypes[Math.floor(Math.random() * grogTypes.length)];
+            
+            const pirateResponses = [
+                `Arrr! A fine choice! One ${randomGrog} comin' right up, ye thirsty sea dog!`,
+                `Shiver me timbers! ${randomGrog} be a strong one! Drink slow or walk the plank!`,
+                `Yo ho ho! ${randomGrog} it be! This'll put hair on yer chest, even if ye be a mermaid!`,
+                `Blimey! ${randomGrog} for the brave soul! This'll make ye sing like a drunken parrot!`
+            ];
+            
+            const randomResponse = pirateResponses[Math.floor(Math.random() * pirateResponses.length)];
+            
+            alert(randomResponse);
+        });
+        
+        // Add some randomized pirate ambiance
+        function pirateAmbiance() {
+            const wheel1 = document.getElementById('wheel1');
+            const wheel2 = document.getElementById('wheel2');
+            
+            // Slowly rotate the ship wheels
+            let rotation1 = 0;
+            let rotation2 = 180;
+            
+            setInterval(() => {
+                rotation1 += 0.5;
+                rotation2 -= 0.3;
+                wheel1.style.transform = `rotate(${rotation1}deg)`;
+                wheel2.style.transform = `rotate(${rotation2}deg)`;
+            }, 100);
+        }
+        
+        // Initialize pirate ambiance
+        pirateAmbiance();
+    </script>
+</body>
+</html>
